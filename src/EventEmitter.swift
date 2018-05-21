@@ -16,16 +16,35 @@ struct AnyObserver: Equatable {
   }
 }
 
+public enum EventDispatchStrategy {
+  /// The event is dispatched in the same thread that called *emitEvent* right away.
+  case immediate
+  /// The event is always dispatched on the main thread.
+  /// If the *emitEvent* invokation was alread in the main thread the effect of this strategy is
+  /// the same of *immediate*.
+  case mainThread
+  /// The event is always dispatched on the main thread, on the next run loop.
+  case nextRunLoop
+  /// The event is always dispatched off the main thead.
+  case backgroundThread
+}
+
 final public class EventEmitter<O: AnyObservable>  {
   /// Reference for the observable object emitting changes.
   public weak var observableObject: O?
   /// The current registered observers.
   private var observers: [AnyObserver] = []
+  /// Used to track the bindings between KVO and *PropertyChangeEvent*.
+  private var kvoTokens: [String: NSKeyValueObservation] = [:]
+  /// The event dispatch strategy.
+  private var defaultDispatchStrategy: EventDispatchStrategy = .immediate
 
   /// Constructs a new emitter with the observable object passed as argument.
   public init(object: O) {
     self.observableObject = object
   }
+
+  // MARK: Registration
 
   /// Registers a new observer for the observable object.
   public func register(observer: Observer, for events: [EventIdentifier] = [ObjectChangeEvent.id]) {
@@ -36,6 +55,16 @@ final public class EventEmitter<O: AnyObservable>  {
     // Initial change event.
     emitObjectChangeEvent(observer: container, attributes: [.initial])
   }
+
+  /// Force unregister an observer.
+  /// - note: This is not necessary in most use-cases since the observation is stopped whenever
+  /// the observer object is being deallocated.
+  public func unregister(observer: Observer) {
+    assert(Thread.isMainThread)
+    observers = observers.filter { $0.observer !== observer && $0.observer != nil }
+  }
+
+  // MARK: ObservationTokens
 
   /// Creates an ad-hoc observer for the event passed as argument.
   /// The observation lifecycle is linked to the *ObservationToken* lifecycle.
@@ -65,13 +94,7 @@ final public class EventEmitter<O: AnyObservable>  {
     return observer
   }
 
-  /// Force unregister an observer.
-  /// - note: This is not necessary in most use-cases since the observation is stopped whenever
-  /// the observer object is being deallocated.
-  public func unregister(observer: Observer) {
-    assert(Thread.isMainThread)
-    observers = observers.filter { $0.observer !== observer && $0.observer != nil }
-  }
+  // MARK: Emit
 
   /// Emit a *ObjectChange* event.
   /// - parameter attributes: Additional event qualifiers.
@@ -121,14 +144,81 @@ final public class EventEmitter<O: AnyObservable>  {
     emitEvent(event, observer: nil)
   }
 
-  private func emitEvent(_ event: AnyEvent, observer: AnyObserver?) {
-    let targets = observer != nil ? [observer!] : observers
+  /// Emit an event.
+  /// - parameter event: The broadcasted event.
+  /// - parameter observer: The target observer (all if none is specified).
+  /// - parameter strategy: The event disptach strategy.
+  private func emitEvent(
+    _ event: AnyEvent,
+    observer: AnyObserver?,
+    strategy: EventDispatchStrategy? = nil) {
 
-    // Notifies the observers.
-    for target in targets
-      where target.events.contains(event.id) || event.id == ObjectChangeEvent.id {
-      guard let observer = target.observer else { continue }
-      observer.onChange(event: event)
+    let currentStrategy = strategy ?? defaultDispatchStrategy
+    dispatch(strategy: currentStrategy) { [weak self] in
+      guard let strongSelf = self else { return }
+
+      let targets = observer != nil ? [observer!] : strongSelf.observers
+      // Notifies the observers.
+      for target in targets
+        where target.events.contains(event.id) || event.id == ObjectChangeEvent.id {
+          guard let observer = target.observer else { continue }
+          observer.onChange(event: event)
+      }
+    }
+  }
+
+  // MARK: KVO Binding
+
+  /// Whenever a KVO change for *object* is triggered, a *PropertyChangeEvent*
+  /// (and an associated *ObjectChangeEvent*) is emitted to all of the registered observers.
+  /// This is a convenient way to unify the object event propagation.
+  /// - parameter object: The object being KVO observed.
+  /// - parameter keyPath: The target keyPath.
+  public func bindKVOToPropertyChangeEvent<N: NSObject & AnyObservable,V>(
+    object: N,
+    keyPath: KeyPath<N, V>) {
+    assert(Thread.isMainThread)
+    let token: NSKeyValueObservation? = object.observe(keyPath, options: [.new, .old, .initial]) {
+      [weak self] (obj: N, change: NSKeyValueObservedChange<V>) in
+      let event = PropertyChangeEvent<N, V>(
+        keyPath: keyPath,
+        object: object,
+        old: change.oldValue,
+        new: change.newValue ?? obj[keyPath: keyPath],
+        attributes: [],
+        debugDescription: "KVO")
+      // Notifies the observers.
+      self?.emitEvent(event)
+      self?.emitObjectChangeEvent()
+    }
+    guard let observationToken = token else { return }
+    kvoTokens[keyPath.id] = observationToken
+  }
+
+  /// Unregister the binding between KVO changes and *PropertyChangeEvent*.
+  public func unbindKVOToPropertyChangeEvent<N: NSObject & AnyObservable,V>(
+    object: N,
+    keyPath: KeyPath<N, V>) {
+    assert(Thread.isMainThread)
+    kvoTokens[keyPath.id] = nil
+  }
+
+  // MARK: Dispatch
+
+  public func dispatch(strategy: EventDispatchStrategy, _ block: @escaping () -> Void) {
+    switch strategy {
+    case .immediate:
+      block()
+    case .mainThread:
+      if Thread.isMainThread {
+        block()
+      } else {
+        DispatchQueue.main.async(execute: block)
+      }
+    case .nextRunLoop:
+      DispatchQueue.main.async(execute: block)
+    case .backgroundThread:
+      DispatchQueue.global().async(execute: block)
     }
   }
 }

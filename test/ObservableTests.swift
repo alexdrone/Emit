@@ -1,33 +1,6 @@
 import XCTest
 @testable import Emit
 
-final class ObservableFoo: Observable {
-  struct EventIdentifier {
-    static let didSomething = "ObservableFoo.didSomething"
-    static let didChangeSomeValue = "ObservableFoo.didChangeSomeValueg"
-  }
-  var bar: String = "bar" {
-    didSet {
-      emitPropertyChangeEvent(keyPath: \.bar)
-    }
-  }
-  private var baz = "baz"
-
-  func doSomething() {
-    let event = Event(id: EventIdentifier.didSomething)
-    emitEvent(event)
-  }
-
-  func changeSomeValueNotAProperty() {
-    let event = ValueChangeEvent(id: EventIdentifier.didChangeSomeValue, value: 42)
-    emitEvent(event)
-  }
-
-  lazy var eventEmitter: EventEmitter<ObservableFoo> = {
-    return  EventEmitter(object: self)
-  }()
-}
-
 class ObservableTests: XCTestCase {
 
   func testInitialObjectChangeEvent() {
@@ -137,5 +110,72 @@ class ObservableTests: XCTestCase {
     // Just to silence the variable never used token.
     token.dispose()
     objChangeToken.dispose()
+  }
+
+  func testKVOBinding() {
+    var objectChangeCount = 0
+    var propertyChangeCount = 0
+    let foo = ObservableNSFoo()
+    // A change to *foo.bar* will trigger a *PropertyChangeEvent*.
+    let token = foo.observeKeyPath(keyPath: \.dynamicBar) { event in
+      propertyChangeCount += 1
+      XCTAssert(event.object === foo)
+      XCTAssert(event.newValue == "baz")
+    }
+    // An *ObjectChange* event is trigger on registration with attributes '.initial'.
+    // For every *PropertyChangeEvent* emitted, a *ObjectChange* is emitted too.
+    let objChangeToken = foo.observeObjectChange { event in
+      objectChangeCount += 1
+      XCTAssert(event.object === foo)
+      XCTAssert(event.id == ObjectChangeEvent.id)
+    }
+    foo.dynamicBar = "baz"
+    XCTAssert(propertyChangeCount == 1)
+    XCTAssert(objectChangeCount == 2)
+    // Just to silence the variable never used token.
+    token.dispose()
+    objChangeToken.dispose()
+  }
+}
+
+// MARK: Test Objects
+
+final class ObservableFoo: Observable {
+  struct EventIdentifier {
+    static let didSomething = "ObservableFoo.didSomething"
+    static let didChangeSomeValue = "ObservableFoo.didChangeSomeValueg"
+  }
+  var bar: String = "bar" {
+    didSet {
+      emitPropertyChangeEvent(keyPath: \.bar)
+    }
+  }
+  private var baz = "baz"
+
+  func doSomething() {
+    let event = Event(id: EventIdentifier.didSomething)
+    emitEvent(event)
+  }
+
+  func changeSomeValueNotAProperty() {
+    let event = ValueChangeEvent(id: EventIdentifier.didChangeSomeValue, value: 42)
+    emitEvent(event)
+  }
+
+  lazy var eventEmitter: EventEmitter<ObservableFoo> = {
+    return EventEmitter(object: self)
+  }()
+}
+
+final class ObservableNSFoo: NSObject, Observable {
+  @objc dynamic var dynamicBar: String = "test"
+
+  lazy var eventEmitter: EventEmitter<ObservableNSFoo> = {
+    return EventEmitter(object: self)
+  }()
+
+  override init() {
+    super.init()
+    bindKVOToPropertyChangeEvent(keyPath: \.dynamicBar)
   }
 }

@@ -1,0 +1,37 @@
+name: Emit
+options:
+  deploymentTarget:
+    iOS: 10.0
+    macOS: 10.12
+  usesTabs: false
+  indentWidth: 2
+targets:
+  Test:
+    platform: iOS
+    type: bundle.unit-test
+    sources:
+      - test
+    dependencies:
+      - target: Emit_iOS
+    scheme:
+      testTargets:
+        - Test
+      gatherCoverageData: true
+      environmentVariables:
+        - variable: TEST
+          value: YES
+          isEnabled: true
+  Emit:
+    platform: [iOS, macOS]
+    type: framework
+
+    sources: 
+      - src
+    settings:
+      base:
+        INFOPLIST_FILE: src/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: io.alexdrone.emit
+        PLATFORM: platform $platform
+      configFiles:
+        Debug: configs/Debug.xcconfig
+        Release: configs/Release.xcconfig

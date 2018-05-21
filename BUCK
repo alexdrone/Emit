@@ -1,7 +1,7 @@
-apple_library(
-  name = 'Observable',
+apple_libreary(
+  name = 'Emit',
   visibility = ['PUBLIC'],
-  preprocessor_flags = ['-D', 'PRODUCT_NAME=Observable'],
+  preprocessor_flags = ['-D', 'PRODUCT_NAME=Emit'],
   exported_headers = glob([
     'src/**/*.h'
   ]),
@@ -19,7 +19,7 @@ apple_resource(
 apple_binary(
     name = 'DemoBinary',
     srcs = glob(['demo/src/*.swift']),
-    deps = [':Observable'],
+    deps = [':Emit'],
     frameworks = [
         '$SDKROOT/System/Library/Frameworks/Foundation.framework',
         '$SDKROOT/System/Library/Frameworks/UIKit.framework',

@@ -9,6 +9,10 @@ public struct EventAttributes: OptionSet {
   /// This property is being refreshed and is pending update.
   /// Useful to model an interstitial state for this change.
   public static let pending = EventAttributes(rawValue: 1 << 0)
+  /// Associated to an *ObjectChange* event can be used to notify the deallocation of the
+  /// observed object.
+  /// - note: This is meaningful only if the event dispatch strategy is *immediate*.
+  public static let dealloc = EventAttributes(rawValue: 2 << 0)
 
   public init(rawValue: Int) {
     self.rawValue = rawValue
@@ -27,9 +31,46 @@ public protocol AnyEvent {
 }
 
 @_fixed_layout
+public struct Event: AnyEvent {
+  final public class Id { }
+
+  /// The event unique identifier (usually a const string).
+  public var id: EventIdentifier
+  public weak var object: AnyObservable?
+  public var attributes: EventAttributes
+  public var userInfo: UserInfo?
+  /// Additional information emitted by the observable object that helps identifing the nature
+  /// of this property change.
+  public let debugDescription: String?
+
+  /// Creates a new *ObjectChange* event.
+  /// - parameter id: A unique identifier for this event.
+  /// - parameter object: The object that has changed (Optional).
+  /// - parameter attributes: Event qualifiers.
+  /// - parameter debugDescription: Optional debug description.
+  public init(
+    id: String,
+    object: AnyObservable? = nil,
+    attributes: EventAttributes = [],
+    userInfo: UserInfo? = nil,
+    debugDescription: String? = nil) {
+
+    self.id = id
+    self.object = object
+    self.attributes = attributes
+    self.userInfo = userInfo
+    self.debugDescription = debugDescription
+  }
+}
+
+public extension Event.Id {
+  public static let objectChange: EventIdentifier = "_object"
+  public static let all: EventIdentifier = "_all"
+}
+
+@_fixed_layout
 public struct ObjectChangeEvent: AnyEvent {
-  /// Default identifier for globsal object change events.
-  public static let id: EventIdentifier = "_object"
+  public static let id: EventIdentifier = Event.Id.objectChange
   /// The keypath identifier.
   public let id: String = ObjectChangeEvent.id
   public weak var object: AnyObservable?
@@ -90,37 +131,6 @@ public struct PropertyChangeEvent<O: AnyObservable, V>: AnyEvent {
 }
 
 @_fixed_layout
-public struct Event: AnyEvent {
-  /// The event unique identifier (usually a const string).
-  public var id: EventIdentifier
-  public weak var object: AnyObservable?
-  public var attributes: EventAttributes
-  public var userInfo: UserInfo?
-  /// Additional information emitted by the observable object that helps identifing the nature
-  /// of this property change.
-  public let debugDescription: String?
-
-  /// Creates a new *ObjectChange* event.
-  /// - parameter id: A unique identifier for this event.
-  /// - parameter object: The object that has changed (Optional).
-  /// - parameter attributes: Event qualifiers.
-  /// - parameter debugDescription: Optional debug description.
-  public init(
-    id: String,
-    object: AnyObservable? = nil,
-    attributes: EventAttributes = [],
-    userInfo: UserInfo? = nil,
-    debugDescription: String? = nil) {
-
-    self.id = id
-    self.object = object
-    self.attributes = attributes
-    self.userInfo = userInfo
-    self.debugDescription = debugDescription
-  }
-}
-
-@_fixed_layout
 public struct ValueChangeEvent<V>: AnyEvent {
   /// The event unique identifier (usually a const string).
   public var id: EventIdentifier
@@ -149,6 +159,37 @@ public struct ValueChangeEvent<V>: AnyEvent {
     self.id = id
     self.object = object
     self.value = value
+    self.attributes = attributes
+    self.userInfo = userInfo
+    self.debugDescription = debugDescription
+  }
+}
+
+@_fixed_layout
+public struct ArrayChangeEvent<O: AnyObservable>: AnyEvent {
+  /// The event unique identifier (usually a const string).
+  public var id: EventIdentifier
+  public weak var object: AnyObservable?
+  public var attributes: EventAttributes
+  public var userInfo: UserInfo?
+  /// Additional information emitted by the observable object that helps identifing the nature
+  /// of this property change.
+  public let debugDescription: String?
+
+  /// Creates a new *ObjectChange* event.
+  /// - parameter id: A unique identifier for this event.
+  /// - parameter object: The object that has changed (Optional).
+  /// - parameter attributes: Event qualifiers.
+  /// - parameter debugDescription: Optional debug description.
+  public init(
+    id: String,
+    object: AnyObservable? = nil,
+    attributes: EventAttributes = [],
+    userInfo: UserInfo? = nil,
+    debugDescription: String? = nil) {
+
+    self.id = id
+    self.object = object
     self.attributes = attributes
     self.userInfo = userInfo
     self.debugDescription = debugDescription

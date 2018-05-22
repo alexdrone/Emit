@@ -16,28 +16,25 @@ struct AnyObserver: Equatable {
   }
 }
 
-public enum EventDispatchStrategy {
-  /// The event is dispatched in the same thread that called *emitEvent* right away.
-  case immediate
-  /// The event is always dispatched on the main thread.
-  /// If the *emitEvent* invokation was alread in the main thread the effect of this strategy is
-  /// the same of *immediate*.
-  case mainThread
-  /// The event is always dispatched on the main thread, on the next run loop.
-  case nextRunLoop
-  /// The event is always dispatched off the main thead.
-  case backgroundThread
+public protocol EventEmitterProtocol: class {
+  /// Emit an event.
+  func emitEvent(_ event: AnyEvent)
 }
 
 final public class EventEmitter<O: AnyObservable>  {
   /// Reference for the observable object emitting changes.
   public weak var observableObject: O?
+  /// All of the events emitted are also going ot be propagate to this emitter (if applicable).
+  public weak var chainedEventEmitter: EventEmitterProtocol?
+  /// Dispatch the event notifications with the desired *EventDispatchStrategy*.
+  /// - note: This can be overridden with a custom *Dispatcher* implementation.
+  public var dispatcher: Dispatcher = DefaultDispatcher()
   /// The current registered observers.
   private var observers: [AnyObserver] = []
-  /// Used to track the bindings between KVO and *PropertyChangeEvent*.
+  /// Used to track the bindings betwzween KVO and *PropertyChangeEvent*.
   private var kvoTokens: [String: NSKeyValueObservation] = [:]
   /// The event dispatch strategy.
-  private var defaultDispatchStrategy: EventDispatchStrategy = .immediate
+  private var dispatchStrategy: EventDispatchStrategy = .immediate
 
   /// Constructs a new emitter with the observable object passed as argument.
   public init(object: O) {
@@ -47,7 +44,7 @@ final public class EventEmitter<O: AnyObservable>  {
   // MARK: Registration
 
   /// Registers a new observer for the observable object.
-  public func register(observer: Observer, for events: [EventIdentifier] = [ObjectChangeEvent.id]) {
+  public func register(observer: Observer, for events: [EventIdentifier]) {
     assert(Thread.isMainThread)
     let container = AnyObserver(observer: observer, events: events)
     observers = observers.filter { $0 != container && $0.observer != nil }
@@ -73,6 +70,7 @@ final public class EventEmitter<O: AnyObservable>  {
   public func observe<E: AnyEvent>(
     id: EventIdentifier,
     onChange: @escaping (E) -> Void) -> Token<O, E> {
+
     assert(Thread.isMainThread)
     let observer = ObservationToken<O, E>(id: id, onChange: onChange)
     observer.object = observableObject
@@ -87,6 +85,7 @@ final public class EventEmitter<O: AnyObservable>  {
   public func observe<V>(
     keyPath: KeyPath<O, V>,
     onChange: @escaping (PCEvent<O, V>) -> Void) -> PropertyToken<O, V> {
+
     assert(Thread.isMainThread)
     let observer = PropertyChangeObservationToken(keyPath: keyPath, onChange: onChange)
     observer.object = observableObject
@@ -117,14 +116,14 @@ final public class EventEmitter<O: AnyObservable>  {
   /// - parameter userInfo: Optional user info dictionary.
   public func emitPropertyChangeEvent<V>(
     keyPath: KeyPath<O, V>,
-    old: V? = nil,
-    attributes: EventAttributes = [],
-    debugDescription: String = "",
-    userInfo: UserInfo? = nil) {
+    old: V?,
+    attributes: EventAttributes,
+    debugDescription: String,
+    userInfo: UserInfo?) {
+
     // Sanity check.
     guard let object = observableObject else { return }
     let new = object[keyPath: keyPath]
-
     var event = PropertyChangeEvent(
       keyPath: keyPath,
       object: object,
@@ -142,6 +141,7 @@ final public class EventEmitter<O: AnyObservable>  {
   /// - parameter event: The event that is going to be pushed down to all of the observers.
   public func emitEvent(_ event: AnyEvent) {
     emitEvent(event, observer: nil)
+    chainedEventEmitter?.emitEvent(event)
   }
 
   /// Emit an event.
@@ -153,14 +153,14 @@ final public class EventEmitter<O: AnyObservable>  {
     observer: AnyObserver?,
     strategy: EventDispatchStrategy? = nil) {
 
-    let currentStrategy = strategy ?? defaultDispatchStrategy
-    dispatch(strategy: currentStrategy) { [weak self] in
+    let currentStrategy = strategy ?? dispatchStrategy
+    dispatcher.dispatch(strategy: currentStrategy) { [weak self] in
       guard let strongSelf = self else { return }
 
       let targets = observer != nil ? [observer!] : strongSelf.observers
       // Notifies the observers.
       for target in targets
-        where target.events.contains(event.id) || event.id == ObjectChangeEvent.id {
+        where target.events.contains(event.id) || event.id == Event.Id.all {
           guard let observer = target.observer else { continue }
           observer.onChange(event: event)
       }
@@ -177,6 +177,7 @@ final public class EventEmitter<O: AnyObservable>  {
   public func bindKVOToPropertyChangeEvent<N: NSObject & AnyObservable,V>(
     object: N,
     keyPath: KeyPath<N, V>) {
+
     assert(Thread.isMainThread)
     let token: NSKeyValueObservation? = object.observe(keyPath, options: [.new, .old, .initial]) {
       [weak self] (obj: N, change: NSKeyValueObservedChange<V>) in
@@ -186,7 +187,7 @@ final public class EventEmitter<O: AnyObservable>  {
         old: change.oldValue,
         new: change.newValue ?? obj[keyPath: keyPath],
         attributes: [],
-        debugDescription: "KVO")
+        debugDescription: "\(keyPath._kvcKeyPathString ?? "")")
       // Notifies the observers.
       self?.emitEvent(event)
       self?.emitObjectChangeEvent()
@@ -201,24 +202,5 @@ final public class EventEmitter<O: AnyObservable>  {
     keyPath: KeyPath<N, V>) {
     assert(Thread.isMainThread)
     kvoTokens[keyPath.id] = nil
-  }
-
-  // MARK: Dispatch
-
-  public func dispatch(strategy: EventDispatchStrategy, _ block: @escaping () -> Void) {
-    switch strategy {
-    case .immediate:
-      block()
-    case .mainThread:
-      if Thread.isMainThread {
-        block()
-      } else {
-        DispatchQueue.main.async(execute: block)
-      }
-    case .nextRunLoop:
-      DispatchQueue.main.async(execute: block)
-    case .backgroundThread:
-      DispatchQueue.global().async(execute: block)
-    }
   }
 }

@@ -12,7 +12,7 @@ extension Observable {
   // MARK: Registration
 
   /// Registers a new observer for the observable object.
-  public func register(observer: Observer, for events: [EventIdentifier] = [ObjectChangeEvent.id]) {
+  public func register(observer: Observer, for events: [EventIdentifier] = [Event.Id.all]) {
     eventEmitter.register(observer: observer, for: events)
   }
 
@@ -51,6 +51,8 @@ extension Observable {
     onChange: @escaping (PCEvent<Self, V>) -> Void) -> PropertyToken<Self, V> {
     return eventEmitter.observe(keyPath: keyPath, onChange: onChange)
   }
+
+  // MARK: Registration
 
   /// Emit a *ObjectChange* event.
   /// - parameter attributes: Additional event qualifiers.

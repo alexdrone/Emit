@@ -7,10 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1606203B20B418B4008175E2 /* Dispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1606203A20B418B4008175E2 /* Dispatcher.swift */; };
-		1606203C20B418BE008175E2 /* Dispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1606203A20B418B4008175E2 /* Dispatcher.swift */; };
-		166A007820B405FE006B2DDB /* ArrayObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166A007720B405FE006B2DDB /* ArrayObservable.swift */; };
-		166A007920B405FE006B2DDB /* ArrayObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166A007720B405FE006B2DDB /* ArrayObservable.swift */; };
+		1606203B20B418B4008175E2 /* Concurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1606203A20B418B4008175E2 /* Concurrency.swift */; };
+		1606203C20B418BE008175E2 /* Concurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1606203A20B418B4008175E2 /* Concurrency.swift */; };
 		BF_132977660500 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_640820736363 /* Observable.swift */; };
 		BF_156289899039 /* Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_826643526656 /* Observer.swift */; };
 		BF_234138615172 /* Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_826643526656 /* Observer.swift */; };
@@ -36,8 +34,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1606203A20B418B4008175E2 /* Dispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dispatcher.swift; sourceTree = "<group>"; };
-		166A007720B405FE006B2DDB /* ArrayObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayObservable.swift; sourceTree = "<group>"; };
+		1606203A20B418B4008175E2 /* Concurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Concurrency.swift; sourceTree = "<group>"; };
 		FR_236718980560 /* Emit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Emit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FR_244407894630 /* Events.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
 		FR_282239236428 /* Observable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Observable.h; sourceTree = "<group>"; };
@@ -66,14 +63,13 @@
 		G_4799450059734 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				1606203A20B418B4008175E2 /* Dispatcher.swift */,
+				1606203A20B418B4008175E2 /* Concurrency.swift */,
 				FR_244407894630 /* Events.swift */,
 				FR_664439253323 /* Emitter.swift */,
 				FR_456968685412 /* Info.plist */,
 				FR_282239236428 /* Observable.h */,
 				FR_640820736363 /* Observable.swift */,
 				FR_826643526656 /* Observer.swift */,
-				166A007720B405FE006B2DDB /* ArrayObservable.swift */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -212,8 +208,7 @@
 			files = (
 				BF_789422606948 /* Events.swift in Sources */,
 				BF_753730078176 /* Emitter.swift in Sources */,
-				1606203B20B418B4008175E2 /* Dispatcher.swift in Sources */,
-				166A007820B405FE006B2DDB /* ArrayObservable.swift in Sources */,
+				1606203B20B418B4008175E2 /* Concurrency.swift in Sources */,
 				BF_132977660500 /* Observable.swift in Sources */,
 				BF_156289899039 /* Observer.swift in Sources */,
 			);
@@ -233,8 +228,7 @@
 			files = (
 				BF_630342938997 /* Events.swift in Sources */,
 				BF_785924986561 /* Emitter.swift in Sources */,
-				1606203C20B418BE008175E2 /* Dispatcher.swift in Sources */,
-				166A007920B405FE006B2DDB /* ArrayObservable.swift in Sources */,
+				1606203C20B418BE008175E2 /* Concurrency.swift in Sources */,
 				BF_848468247095 /* Observable.swift in Sources */,
 				BF_234138615172 /* Observer.swift in Sources */,
 			);

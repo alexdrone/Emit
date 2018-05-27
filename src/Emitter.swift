@@ -28,13 +28,15 @@ final public class EventEmitter<O: AnyObservable>  {
   public weak var chainedEventEmitter: EventEmitterProtocol?
   /// Dispatch the event notifications with the desired *EventDispatchStrategy*.
   /// - note: This can be overridden with a custom *Dispatcher* implementation.
-  public var dispatcher: Dispatcher = DefaultDispatcher()
+  public var dispatcher: Dispatcher = DefaultDispatcher.default
+  /// The event dispatch strategy.
+  public var dispatchStrategy: EventDispatchStrategy = .immediate
+  /// The synchronization strategy used for observers registration/deregistration.
+  public var synchronizationStrategy: SynchronizationStrategy = NonSyncronizedMainThread.default
   /// The current registered observers.
   private var observers: [AnyObserver] = []
   /// Used to track the bindings betwzween KVO and *PropertyChangeEvent*.
   private var kvoTokens: [String: NSKeyValueObservation] = [:]
-  /// The event dispatch strategy.
-  private var dispatchStrategy: EventDispatchStrategy = .immediate
 
   /// Constructs a new emitter with the observable object passed as argument.
   public init(object: O) {
@@ -45,10 +47,12 @@ final public class EventEmitter<O: AnyObservable>  {
 
   /// Registers a new observer for the observable object.
   public func register(observer: Observer, for events: [EventIdentifier]) {
-    assert(Thread.isMainThread)
     let container = AnyObserver(observer: observer, events: events)
-    observers = observers.filter { $0 != container && $0.observer != nil }
-    observers.append(container)
+    synchronizationStrategy.synchronize { [weak self] in
+      guard let `self` = self else { return }
+      self.observers = self.observers.filter { $0 != container && $0.observer != nil }
+      self.observers.append(container)
+    }
     // Initial change event.
     emitObjectChangeEvent(observer: container, attributes: [.initial])
   }
@@ -57,8 +61,10 @@ final public class EventEmitter<O: AnyObservable>  {
   /// - note: This is not necessary in most use-cases since the observation is stopped whenever
   /// the observer object is being deallocated.
   public func unregister(observer: Observer) {
-    assert(Thread.isMainThread)
-    observers = observers.filter { $0.observer !== observer && $0.observer != nil }
+    synchronizationStrategy.synchronize { [weak self] in
+      guard let `self` = self else { return }
+      self.observers = self.observers.filter { $0.observer !== observer && $0.observer != nil }
+    }
   }
 
   // MARK: ObservationTokens
@@ -71,7 +77,6 @@ final public class EventEmitter<O: AnyObservable>  {
     id: EventIdentifier,
     onChange: @escaping (E) -> Void) -> Token<O, E> {
 
-    assert(Thread.isMainThread)
     let observer = ObservationToken<O, E>(id: id, onChange: onChange)
     observer.object = observableObject
     register(observer: observer, for: [id])
@@ -86,7 +91,6 @@ final public class EventEmitter<O: AnyObservable>  {
     keyPath: KeyPath<O, V>,
     onChange: @escaping (PCEvent<O, V>) -> Void) -> PropertyToken<O, V> {
 
-    assert(Thread.isMainThread)
     let observer = PropertyChangeObservationToken(keyPath: keyPath, onChange: onChange)
     observer.object = observableObject
     register(observer: observer, for: [keyPath.id])
@@ -178,29 +182,34 @@ final public class EventEmitter<O: AnyObservable>  {
     object: N,
     keyPath: KeyPath<N, V>) {
 
-    assert(Thread.isMainThread)
-    let token: NSKeyValueObservation? = object.observe(keyPath, options: [.new, .old, .initial]) {
-      [weak self] (obj: N, change: NSKeyValueObservedChange<V>) in
-      let event = PropertyChangeEvent<N, V>(
-        keyPath: keyPath,
-        object: object,
-        old: change.oldValue,
-        new: change.newValue ?? obj[keyPath: keyPath],
-        attributes: [],
-        debugDescription: "\(keyPath._kvcKeyPathString ?? "")")
-      // Notifies the observers.
-      self?.emitEvent(event)
-      self?.emitObjectChangeEvent()
+    synchronizationStrategy.synchronize { [weak self] in
+      guard let `self` = self else { return }
+      let token: NSKeyValueObservation? = object.observe(keyPath, options: [.new, .old, .initial]) {
+        [weak self] (obj: N, change: NSKeyValueObservedChange<V>) in
+        let event = PropertyChangeEvent<N, V>(
+          keyPath: keyPath,
+          object: object,
+          old: change.oldValue,
+          new: change.newValue ?? obj[keyPath: keyPath],
+          attributes: [],
+          debugDescription: "\(keyPath._kvcKeyPathString ?? "")")
+        // Notifies the observers.
+        self?.emitEvent(event)
+        self?.emitObjectChangeEvent()
+      }
+      guard let observationToken = token else { return }
+      self.kvoTokens[keyPath.id] = observationToken
     }
-    guard let observationToken = token else { return }
-    kvoTokens[keyPath.id] = observationToken
   }
 
   /// Unregister the binding between KVO changes and *PropertyChangeEvent*.
   public func unbindKVOToPropertyChangeEvent<N: NSObject & AnyObservable,V>(
     object: N,
     keyPath: KeyPath<N, V>) {
-    assert(Thread.isMainThread)
-    kvoTokens[keyPath.id] = nil
+
+    synchronizationStrategy.synchronize { [weak self] in
+      guard let `self` = self else { return }
+      self.kvoTokens[keyPath.id] = nil
+    }
   }
 }

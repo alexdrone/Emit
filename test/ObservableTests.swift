@@ -5,7 +5,7 @@ class ObservableTests: XCTestCase {
 
   func testInitialObjectChangeEvent() {
     var changeCount = 0
-    let foo = ObservableFoo()
+    let foo = Foo()
     // An *ObjectChange* event is trigger on registration with attributes '.initial'.
     let token = foo.observeObjectChange { event in
       changeCount += 1
@@ -20,7 +20,7 @@ class ObservableTests: XCTestCase {
 
   func testObjectChangeEvent() {
     var changeCount = 0
-    let foo = ObservableFoo()
+    let foo = Foo()
     // An *ObjectChange* event is trigger on registration with attributes '.initial'.
     // For every *PropertyChangeEvent* emitted, a *ObjectChange* is emitted too.
     let token = foo.observeObjectChange { event in
@@ -37,7 +37,7 @@ class ObservableTests: XCTestCase {
   func testPropertytChangeEvent() {
     var propertyChangeCount = 0
     var objectChangeCount = 0
-    let foo = ObservableFoo()
+    let foo = Foo()
     // A change to *foo.bar* will trigger a *PropertyChangeEvent*.
     let token = foo.observeKeyPath(keyPath: \.bar) { event in
       propertyChangeCount += 1
@@ -62,9 +62,9 @@ class ObservableTests: XCTestCase {
   func testSimpleEvent() {
     var objectChangeCount = 0
     var eventChangeCount = 0
-    let foo = ObservableFoo()
+    let foo = Foo()
     // *doSomething* in foo triggers *didSomething*.
-    let id = ObservableFoo.EventIdentifier.didSomething
+    let id = Foo.EventIdentifier.didSomething
     let token = foo.observeEvent(id: id){ (event: Event)  in
       eventChangeCount += 1
       XCTAssert(event.id == id)
@@ -88,9 +88,9 @@ class ObservableTests: XCTestCase {
   func testValueChangeEvent() {
     var objectChangeCount = 0
     var eventChangeCount = 0
-    let foo = ObservableFoo()
+    let foo = Foo()
     // *changeSomeValueNotAProperty* in foo triggers *didChangeSomeValue*.
-    let id = ObservableFoo.EventIdentifier.didChangeSomeValue
+    let id = Foo.EventIdentifier.didChangeSomeValue
     let token = foo.observeEvent(id: id){ (event: ValueChangeEvent<Int>)  in
       eventChangeCount += 1
       XCTAssert(event.id == id)
@@ -135,48 +135,5 @@ class ObservableTests: XCTestCase {
     // Just to silence the variable never used token.
     token.dispose()
     objChangeToken.dispose()
-  }
-}
-
-// MARK: Test Objects
-
-final class ObservableFoo: Observable, Equatable {
-  struct EventIdentifier {
-    static let didSomething = "ObservableFoo.didSomething"
-    static let didChangeSomeValue = "ObservableFoo.didChangeSomeValueg"
-  }
-  public static func == (lhs: ObservableFoo, rhs: ObservableFoo) -> Bool {
-    return lhs.bar == rhs.bar && lhs.baz == rhs.baz
-  }
-  var bar: String = "bar" {
-    didSet { emitPropertyChangeEvent(keyPath: \.bar) }
-  }
-  private var baz = "baz"
-
-  func doSomething() {
-    let event = Event(id: EventIdentifier.didSomething)
-    emitEvent(event)
-  }
-
-  func changeSomeValueNotAProperty() {
-    let event = ValueChangeEvent(id: EventIdentifier.didChangeSomeValue, value: 42)
-    emitEvent(event)
-  }
-
-  lazy var eventEmitter: EventEmitter<ObservableFoo> = {
-    return EventEmitter(object: self)
-  }()
-}
-
-final class ObservableNSFoo: NSObject, Observable {
-  @objc dynamic var dynamicBar: String = "test"
-
-  lazy var eventEmitter: EventEmitter<ObservableNSFoo> = {
-    return EventEmitter(object: self)
-  }()
-
-  override init() {
-    super.init()
-    bindKVOToPropertyChangeEvent(keyPath: \.dynamicBar)
   }
 }

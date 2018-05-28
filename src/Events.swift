@@ -170,14 +170,11 @@ public struct ValueChangeEvent<V>: AnyEvent {
 public struct ArrayChangeEvent<T: Equatable>: AnyEvent {
   /// The event unique identifier (usually a const string).
   public var id: EventIdentifier
-  public var object: AnyObservable? { return ObservableArray }
+  public var object: AnyObservable? { return observableArray }
   public var attributes: EventAttributes
   public var userInfo: UserInfo?
-  /// Additional information emitted by the observable object that helps identifing the nature
-  /// of this property change.
-  public let debugDescription: String?
   /// The observable array that triggered the change.
-  public weak var ObservableArray: ObservableArray<T>?
+  public weak var observableArray: ObservableArray<T>?
   /// The old collection.
   public let old: [T]
   /// The new collection.
@@ -196,10 +193,9 @@ public struct ArrayChangeEvent<T: Equatable>: AnyEvent {
     new: [T]) {
 
     self.id = Event.Id.arrayChange
-    self.ObservableArray = object
+    self.observableArray = object
     self.attributes = []
     self.userInfo = nil
-    self.debugDescription = ""
     self.old = old
     self.new = new
   }

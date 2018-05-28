@@ -44,7 +44,7 @@ final public class ObservableArray<T: Equatable>: ObservableArrayProtocol {
 
   /// Listen for *ArrayChangeEvent* events.
   /// - parameter onChange: The closure executed whenever the desired event is emitted.
-  public func observeArray(onChange: @escaping (ArrayChangeEvent<T>) -> Void) -> Observer {
+  public func observeArrayChange(onChange: @escaping (ArrayChangeEvent<T>) -> Void) -> Observer {
     return eventEmitter.observeArray(onChange: onChange)!
   }
 

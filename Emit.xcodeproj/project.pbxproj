@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1600F83820BC9A13000DC58E /* TestObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1600F83720BC9A13000DC58E /* TestObjects.swift */; };
 		1606203B20B418B4008175E2 /* Concurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1606203A20B418B4008175E2 /* Concurrency.swift */; };
 		1606203C20B418BE008175E2 /* Concurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1606203A20B418B4008175E2 /* Concurrency.swift */; };
 		16870D8020BB380E003CC80A /* ObservableArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16870D7F20BB380E003CC80A /* ObservableArray.swift */; };
@@ -37,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1600F83720BC9A13000DC58E /* TestObjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestObjects.swift; sourceTree = "<group>"; };
 		1606203A20B418B4008175E2 /* Concurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Concurrency.swift; sourceTree = "<group>"; };
 		16870D7F20BB380E003CC80A /* ObservableArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableArray.swift; sourceTree = "<group>"; };
 		16D1A5B920BC789F003E6ED3 /* ObservableArrayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableArrayTests.swift; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 				FR_493811752375 /* Info.plist */,
 				FR_409147405849 /* ObservableTests.swift */,
 				16D1A5B920BC789F003E6ED3 /* ObservableArrayTests.swift */,
+				1600F83720BC9A13000DC58E /* TestObjects.swift */,
 			);
 			path = test;
 			sourceTree = "<group>";
@@ -228,6 +231,7 @@
 			files = (
 				16D1A5BA20BC789F003E6ED3 /* ObservableArrayTests.swift in Sources */,
 				BF_634522689025 /* ObservableTests.swift in Sources */,
+				1600F83820BC9A13000DC58E /* TestObjects.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,14 +1,14 @@
 import Foundation
 
-// MARK - Event Dispatch Strategy
+// MARK - Dispatch Strategy
 
 public protocol Dispatcher {
   /// This can provide custom threading behaviour for the given dispatch strategy
   /// e.g. Run on a custom dispatch group or queue.
-  func dispatch(strategy: EventDispatchStrategy, _ block: @escaping () -> Void)
+  func dispatch(strategy: DispatchStrategy, _ block: @escaping () -> Void)
 }
 
-public enum EventDispatchStrategy {
+public enum DispatchStrategy {
   /// The event is dispatched in the same thread that called *emitEvent* right away.
   case immediate
   /// The event is always dispatched on the main thread.
@@ -33,7 +33,7 @@ open class DefaultDispatcher: Dispatcher {
   }()
   /// Default dispatcher implementation.
   @inline(__always)
-  open func dispatch(strategy: EventDispatchStrategy, _ block: @escaping () -> Void) {
+  open func dispatch(strategy: DispatchStrategy, _ block: @escaping () -> Void) {
     switch strategy {
     // The block is executed immeditely on the same call stack.
     case .immediate:
@@ -60,6 +60,21 @@ open class DefaultDispatcher: Dispatcher {
   public init() { }
 }
 
+public protocol Dispatchable {
+  /// - note: This can be overridden with a custom *Dispatcher* implementation.
+  var dispatcher: Dispatcher { get set }
+  /// The event dispatch strategy.
+  var dispatchStrategy: DispatchStrategy  { get set }
+}
+
+public extension Dispatchable {
+  /// Short-hand for *dispatcher.dispatch(strategy:_:)*
+  @inline(__always)
+  public func dispatch(_ block: @escaping () -> Void) {
+    dispatcher.dispatch(strategy: dispatchStrategy, block)
+  }
+}
+
 // MARK - Observer Registration Strategy
 
 public protocol SynchronizationStrategy  {
@@ -75,5 +90,18 @@ public class NonSyncronizedMainThread: SynchronizationStrategy {
   public func synchronize(_ block: @escaping () -> Void) {
     assert(Thread.isMainThread)
     block()
+  }
+}
+
+public protocol Synchronizable {
+  /// The synchronization strategy for the object implementing this protocol.
+  var synchronizationStrategy: SynchronizationStrategy { get set }
+}
+
+public extension Synchronizable {
+  /// Short-hand for *synchronizationStrategy.synchronize(_:)*.
+  @inline(__always)
+  public func synchronize(_ block: @escaping () -> Void) {
+    synchronizationStrategy.synchronize(block)
   }
 }

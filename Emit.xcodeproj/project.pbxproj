@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		1606203B20B418B4008175E2 /* Concurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1606203A20B418B4008175E2 /* Concurrency.swift */; };
 		1606203C20B418BE008175E2 /* Concurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1606203A20B418B4008175E2 /* Concurrency.swift */; };
+		16870D8020BB380E003CC80A /* ObservableArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16870D7F20BB380E003CC80A /* ObservableArray.swift */; };
+		16870D8120BB3819003CC80A /* ObservableArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16870D7F20BB380E003CC80A /* ObservableArray.swift */; };
+		16D1A5BA20BC789F003E6ED3 /* ObservableArrayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D1A5B920BC789F003E6ED3 /* ObservableArrayTests.swift */; };
 		BF_132977660500 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_640820736363 /* Observable.swift */; };
 		BF_156289899039 /* Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_826643526656 /* Observer.swift */; };
 		BF_234138615172 /* Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_826643526656 /* Observer.swift */; };
@@ -35,6 +38,8 @@
 
 /* Begin PBXFileReference section */
 		1606203A20B418B4008175E2 /* Concurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Concurrency.swift; sourceTree = "<group>"; };
+		16870D7F20BB380E003CC80A /* ObservableArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableArray.swift; sourceTree = "<group>"; };
+		16D1A5B920BC789F003E6ED3 /* ObservableArrayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableArrayTests.swift; sourceTree = "<group>"; };
 		FR_236718980560 /* Emit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Emit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FR_244407894630 /* Events.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
 		FR_282239236428 /* Observable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Observable.h; sourceTree = "<group>"; };
@@ -69,6 +74,7 @@
 				FR_456968685412 /* Info.plist */,
 				FR_282239236428 /* Observable.h */,
 				FR_640820736363 /* Observable.swift */,
+				16870D7F20BB380E003CC80A /* ObservableArray.swift */,
 				FR_826643526656 /* Observer.swift */,
 			);
 			path = src;
@@ -79,6 +85,7 @@
 			children = (
 				FR_493811752375 /* Info.plist */,
 				FR_409147405849 /* ObservableTests.swift */,
+				16D1A5B920BC789F003E6ED3 /* ObservableArrayTests.swift */,
 			);
 			path = test;
 			sourceTree = "<group>";
@@ -207,6 +214,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BF_789422606948 /* Events.swift in Sources */,
+				16870D8020BB380E003CC80A /* ObservableArray.swift in Sources */,
 				BF_753730078176 /* Emitter.swift in Sources */,
 				1606203B20B418B4008175E2 /* Concurrency.swift in Sources */,
 				BF_132977660500 /* Observable.swift in Sources */,
@@ -218,6 +226,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16D1A5BA20BC789F003E6ED3 /* ObservableArrayTests.swift in Sources */,
 				BF_634522689025 /* ObservableTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -227,6 +236,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BF_630342938997 /* Events.swift in Sources */,
+				16870D8120BB3819003CC80A /* ObservableArray.swift in Sources */,
 				BF_785924986561 /* Emitter.swift in Sources */,
 				1606203C20B418BE008175E2 /* Concurrency.swift in Sources */,
 				BF_848468247095 /* Observable.swift in Sources */,

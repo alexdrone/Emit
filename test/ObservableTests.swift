@@ -140,15 +140,16 @@ class ObservableTests: XCTestCase {
 
 // MARK: Test Objects
 
-final class ObservableFoo: Observable {
+final class ObservableFoo: Observable, Equatable {
   struct EventIdentifier {
     static let didSomething = "ObservableFoo.didSomething"
     static let didChangeSomeValue = "ObservableFoo.didChangeSomeValueg"
   }
+  public static func == (lhs: ObservableFoo, rhs: ObservableFoo) -> Bool {
+    return lhs.bar == rhs.bar && lhs.baz == rhs.baz
+  }
   var bar: String = "bar" {
-    didSet {
-      emitPropertyChangeEvent(keyPath: \.bar)
-    }
+    didSet { emitPropertyChangeEvent(keyPath: \.bar) }
   }
   private var baz = "baz"
 

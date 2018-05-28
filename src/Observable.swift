@@ -1,6 +1,10 @@
 import Foundation
 
-public protocol AnyObservable: class { }
+public protocol AnyObservable: class {
+  /// Internal only.
+  /// Type-erased event emitter.
+  var anyEventEmitter: EventEmitterProtocol { get}
+}
 
 public protocol Observable: AnyObservable {
   /// The event emitter associated to this instance.
@@ -8,6 +12,11 @@ public protocol Observable: AnyObservable {
 }
 
 extension Observable {
+  /// Internal only.
+  /// Type-erased event emitter.
+  public var anyEventEmitter: EventEmitterProtocol {
+    return eventEmitter
+  }
 
   // MARK: Registration
 

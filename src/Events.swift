@@ -65,6 +65,7 @@ public struct Event: AnyEvent {
 
 public extension Event.Id {
   public static let objectChange: EventIdentifier = "_object"
+  public static let arrayChange: EventIdentifier = "_array"
   public static let all: EventIdentifier = "_all"
 }
 
@@ -166,33 +167,41 @@ public struct ValueChangeEvent<V>: AnyEvent {
 }
 
 @_fixed_layout
-public struct ArrayChangeEvent<O: AnyObservable>: AnyEvent {
+public struct ArrayChangeEvent<T: Equatable>: AnyEvent {
   /// The event unique identifier (usually a const string).
   public var id: EventIdentifier
-  public weak var object: AnyObservable?
+  public var object: AnyObservable? { return ObservableArray }
   public var attributes: EventAttributes
   public var userInfo: UserInfo?
   /// Additional information emitted by the observable object that helps identifing the nature
   /// of this property change.
   public let debugDescription: String?
+  /// The observable array that triggered the change.
+  public weak var ObservableArray: ObservableArray<T>?
+  /// The old collection.
+  public let old: [T]
+  /// The new collection.
+  public let new: [T]
 
   /// Creates a new *ObjectChange* event.
   /// - parameter id: A unique identifier for this event.
   /// - parameter object: The object that has changed (Optional).
+  /// - parameter old: The old collection.
+  /// - parameter new: The new collection.
   /// - parameter attributes: Event qualifiers.
   /// - parameter debugDescription: Optional debug description.
   public init(
-    id: String,
-    object: AnyObservable? = nil,
-    attributes: EventAttributes = [],
-    userInfo: UserInfo? = nil,
-    debugDescription: String? = nil) {
+    object: ObservableArray<T>? = nil,
+    old: [T],
+    new: [T]) {
 
-    self.id = id
-    self.object = object
-    self.attributes = attributes
-    self.userInfo = userInfo
-    self.debugDescription = debugDescription
+    self.id = Event.Id.arrayChange
+    self.ObservableArray = object
+    self.attributes = []
+    self.userInfo = nil
+    self.debugDescription = ""
+    self.old = old
+    self.new = new
   }
 }
 

@@ -1,6 +1,6 @@
 import Foundation
 
-struct AnyObserver: Equatable {
+public struct AnyObserver: Equatable {
   /// The concrete observer.
   private(set) weak var observer: Observer?
   /// The registered eents.
@@ -11,28 +11,30 @@ struct AnyObserver: Equatable {
     self.events = Set(events)
   }
   /// Returns 'true' if the targets are identical, 'false' otherwise.
-  static func ==(lhs: AnyObserver, rhs: AnyObserver) -> Bool {
+  public static func ==(lhs: AnyObserver, rhs: AnyObserver) -> Bool {
     return lhs.observer === rhs.observer
   }
 }
 
-public protocol EventEmitterProtocol: class {
+public protocol EventEmitterProtocol: class, Synchronizable, Dispatchable {
+  /// All of the events emitted are also going ot be propagate to this emitter (if applicable).
+  var chainedEventEmitter: EventEmitterProtocol? { get set }
   /// Emit an event.
-  func emitEvent(_ event: AnyEvent)
+  func emitEvent(_ event: AnyEvent, observer: AnyObserver?, strategy: DispatchStrategy?)
 }
 
-final public class EventEmitter<O: AnyObservable>  {
+final public class EventEmitter<O: AnyObservable>: EventEmitterProtocol {
   /// Reference for the observable object emitting changes.
   public weak var observableObject: O?
-  /// All of the events emitted are also going ot be propagate to this emitter (if applicable).
-  public weak var chainedEventEmitter: EventEmitterProtocol?
   /// Dispatch the event notifications with the desired *EventDispatchStrategy*.
   /// - note: This can be overridden with a custom *Dispatcher* implementation.
   public var dispatcher: Dispatcher = DefaultDispatcher.default
   /// The event dispatch strategy.
-  public var dispatchStrategy: EventDispatchStrategy = .immediate
+  public var dispatchStrategy: DispatchStrategy = .immediate
   /// The synchronization strategy used for observers registration/deregistration.
   public var synchronizationStrategy: SynchronizationStrategy = NonSyncronizedMainThread.default
+  /// All of the events emitted are also going ot be propagate to this emitter (if applicable).
+  public weak var chainedEventEmitter: EventEmitterProtocol?
   /// The current registered observers.
   private var observers: [AnyObserver] = []
   /// Used to track the bindings betwzween KVO and *PropertyChangeEvent*.
@@ -46,9 +48,9 @@ final public class EventEmitter<O: AnyObservable>  {
   // MARK: Registration
 
   /// Registers a new observer for the observable object.
-  public func register(observer: Observer, for events: [EventIdentifier]) {
+  func register(observer: Observer, for events: [EventIdentifier]) {
     let container = AnyObserver(observer: observer, events: events)
-    synchronizationStrategy.synchronize { [weak self] in
+    synchronize { [weak self] in
       guard let `self` = self else { return }
       self.observers = self.observers.filter { $0 != container && $0.observer != nil }
       self.observers.append(container)
@@ -60,8 +62,8 @@ final public class EventEmitter<O: AnyObservable>  {
   /// Force unregister an observer.
   /// - note: This is not necessary in most use-cases since the observation is stopped whenever
   /// the observer object is being deallocated.
-  public func unregister(observer: Observer) {
-    synchronizationStrategy.synchronize { [weak self] in
+  func unregister(observer: Observer) {
+    synchronize { [weak self] in
       guard let `self` = self else { return }
       self.observers = self.observers.filter { $0.observer !== observer && $0.observer != nil }
     }
@@ -73,7 +75,7 @@ final public class EventEmitter<O: AnyObservable>  {
   /// The observation lifecycle is linked to the *ObservationToken* lifecycle.
   /// - parameter id: The identifier of the event being observed.
   /// - parameter onChange: The closure executed whenever the desired event is emitted.
-  public func observe<E: AnyEvent>(
+  func observe<E: AnyEvent>(
     id: EventIdentifier,
     onChange: @escaping (E) -> Void) -> Token<O, E> {
 
@@ -87,7 +89,7 @@ final public class EventEmitter<O: AnyObservable>  {
   /// The observation lifecycle is linked to the *ObservationToken* lifecycle.
   /// - parameter keyPath: The observed keypath.
   /// - parameter onChange: The closure executed whenever the desired event is emitted.
-  public func observe<V>(
+  func observe<V>(
     keyPath: KeyPath<O, V>,
     onChange: @escaping (PCEvent<O, V>) -> Void) -> PropertyToken<O, V> {
 
@@ -97,15 +99,26 @@ final public class EventEmitter<O: AnyObservable>  {
     return observer
   }
 
+  /// Listen for *ArrayChangeEvent* events.
+  /// - note: This function is a no-op and returns *nil* if the observed object associated to
+  /// this emitter is not of kind *ArrayChangeEvent<T>*.
+  /// - parameter onChange: The closure executed whenever the desired event is emitted.
+  func observeArray<T: Equatable>(
+    onChange: @escaping (ArrayChangeEvent<T>) -> Void) -> Token<O, ArrayChangeEvent<T>>? {
+
+    guard let _ = observableObject as? ObservableArray<T> else { return nil }
+    return observe(id: Event.Id.arrayChange, onChange: onChange)
+  }
+
   // MARK: Emit
 
   /// Emit a *ObjectChange* event.
   /// - parameter attributes: Additional event qualifiers.
-  public func emitObjectChangeEvent(attributes: EventAttributes = []) {
+  func emitObjectChangeEvent(attributes: EventAttributes = []) {
     emitObjectChangeEvent(observer: nil, attributes: attributes)
   }
 
-  private func emitObjectChangeEvent(observer: AnyObserver?, attributes: EventAttributes = []) {
+  func emitObjectChangeEvent(observer: AnyObserver?, attributes: EventAttributes = []) {
     guard let object = observableObject else { return }
     let event = ObjectChangeEvent(object: object, attributes: attributes)
     // Notifies the observers.
@@ -118,7 +131,7 @@ final public class EventEmitter<O: AnyObservable>  {
   /// - parameter attributes: Additional event qualifiers.
   /// - parameter debugDescription: Optional custom debug string for this event.
   /// - parameter userInfo: Optional user info dictionary.
-  public func emitPropertyChangeEvent<V>(
+  func emitPropertyChangeEvent<V>(
     keyPath: KeyPath<O, V>,
     old: V?,
     attributes: EventAttributes,
@@ -145,18 +158,18 @@ final public class EventEmitter<O: AnyObservable>  {
   /// - parameter event: The event that is going to be pushed down to all of the observers.
   public func emitEvent(_ event: AnyEvent) {
     emitEvent(event, observer: nil)
-    chainedEventEmitter?.emitEvent(event)
   }
 
   /// Emit an event.
   /// - parameter event: The broadcasted event.
   /// - parameter observer: The target observer (all if none is specified).
   /// - parameter strategy: The event disptach strategy.
-  private func emitEvent(
+  public func emitEvent(
     _ event: AnyEvent,
     observer: AnyObserver?,
-    strategy: EventDispatchStrategy? = nil) {
+    strategy: DispatchStrategy? = nil) {
 
+    chainedEventEmitter?.emitEvent(event, observer: observer, strategy: strategy)
     let currentStrategy = strategy ?? dispatchStrategy
     dispatcher.dispatch(strategy: currentStrategy) { [weak self] in
       guard let strongSelf = self else { return }
@@ -178,11 +191,11 @@ final public class EventEmitter<O: AnyObservable>  {
   /// This is a convenient way to unify the object event propagation.
   /// - parameter object: The object being KVO observed.
   /// - parameter keyPath: The target keyPath.
-  public func bindKVOToPropertyChangeEvent<N: NSObject & AnyObservable,V>(
+  func bindKVOToPropertyChangeEvent<N: NSObject & AnyObservable,V>(
     object: N,
     keyPath: KeyPath<N, V>) {
 
-    synchronizationStrategy.synchronize { [weak self] in
+    synchronize { [weak self] in
       guard let `self` = self else { return }
       let token: NSKeyValueObservation? = object.observe(keyPath, options: [.new, .old, .initial]) {
         [weak self] (obj: N, change: NSKeyValueObservedChange<V>) in
@@ -203,11 +216,11 @@ final public class EventEmitter<O: AnyObservable>  {
   }
 
   /// Unregister the binding between KVO changes and *PropertyChangeEvent*.
-  public func unbindKVOToPropertyChangeEvent<N: NSObject & AnyObservable,V>(
+  func unbindKVOToPropertyChangeEvent<N: NSObject & AnyObservable,V>(
     object: N,
     keyPath: KeyPath<N, V>) {
 
-    synchronizationStrategy.synchronize { [weak self] in
+    synchronize { [weak self] in
       guard let `self` = self else { return }
       self.kvoTokens[keyPath.id] = nil
     }

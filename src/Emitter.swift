@@ -45,7 +45,7 @@ final public class EventEmitter<O: AnyObservable>: EventEmitterProtocol {
     self.observableObject = object
   }
 
-  // MARK: Registration
+  // MARK: - Registration
 
   /// Registers a new observer for the observable object.
   func register(observer: Observer, for events: [EventIdentifier]) {
@@ -69,7 +69,7 @@ final public class EventEmitter<O: AnyObservable>: EventEmitterProtocol {
     }
   }
 
-  // MARK: ObservationTokens
+  // MARK: - ObservationTokens
 
   /// Creates an ad-hoc observer for the event passed as argument.
   /// The observation lifecycle is linked to the *ObservationToken* lifecycle.
@@ -110,7 +110,7 @@ final public class EventEmitter<O: AnyObservable>: EventEmitterProtocol {
     return observe(id: Event.Id.arrayChange, onChange: onChange)
   }
 
-  // MARK: Emit
+  // MARK: - Emit
 
   /// Emit a *ObjectChange* event.
   /// - parameter attributes: Additional event qualifiers.
@@ -184,7 +184,7 @@ final public class EventEmitter<O: AnyObservable>: EventEmitterProtocol {
     }
   }
 
-  // MARK: KVO Binding
+  // MARK: - KVO Binding
 
   /// Whenever a KVO change for *object* is triggered, a *PropertyChangeEvent*
   /// (and an associated *ObjectChangeEvent*) is emitted to all of the registered observers.

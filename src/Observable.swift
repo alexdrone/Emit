@@ -18,7 +18,7 @@ extension Observable {
     return eventEmitter
   }
 
-  // MARK: Registration
+  // MARK: - Registration
 
   /// Registers a new observer for the observable object.
   public func register(observer: Observer, for events: [EventIdentifier] = [Event.Id.all]) {
@@ -32,13 +32,13 @@ extension Observable {
     eventEmitter.unregister(observer: observer)
   }
 
-  // MARK: ObservationTokens
+  // MARK: - ObservationTokens
 
   /// Ad-hoc observer that reacts to *ObjectChangeEvent* events.
   /// - parameter onChange: The closure executed whenever the *ObjectChangeEvent* event is emitted.
   public func observeObjectChange(
     onChange: @escaping (ObjectChangeEvent) -> Void) -> Token<Self, OCEvent> {
-    return observeEvent(id: ObjectChangeEvent.id, onChange: onChange)
+    return observeEvent(id: Event.Id.objectChange, onChange: onChange)
   }
 
   /// Creates an ad-hoc observer for the event passed as argument.
@@ -61,7 +61,7 @@ extension Observable {
     return eventEmitter.observe(keyPath: keyPath, onChange: onChange)
   }
 
-  // MARK: Registration
+  // MARK: - Registration
 
   /// Emit a *ObjectChange* event.
   /// - parameter attributes: Additional event qualifiers.
@@ -96,7 +96,7 @@ extension Observable {
   }
 }
 
-// MARK: KVO Binding
+// MARK: - KVO Binding
 
 extension Observable where Self: NSObject {
 

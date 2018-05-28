@@ -1,10 +1,9 @@
 import Foundation
 
-// MARK - Dispatch Strategy
+// MARK: - Dispatch Strategy
 
 public protocol Dispatcher {
-  /// This can provide custom threading behaviour for the given dispatch strategy
-  /// e.g. Run on a custom dispatch group or queue.
+  /// Provide an implementation for the desired dispatch strategy.
   func dispatch(strategy: DispatchStrategy, _ block: @escaping () -> Void)
 }
 
@@ -12,8 +11,6 @@ public enum DispatchStrategy {
   /// The event is dispatched in the same thread that called *emitEvent* right away.
   case immediate
   /// The event is always dispatched on the main thread.
-  /// If the *emitEvent* invokation was alread in the main thread the effect of this strategy is
-  /// the same of *immediate*.
   case mainThread
   /// The event is always dispatched on the main thread, on the next run loop.
   case nextRunLoop
@@ -23,7 +20,7 @@ public enum DispatchStrategy {
   case serialQueue
 }
 
-open class DefaultDispatcher: Dispatcher {
+final public class DefaultDispatcher: Dispatcher {
   public static let `default` = DefaultDispatcher()
   /// Internal serial dispatch queue.
   public let serialOperationQueue: OperationQueue = {
@@ -35,23 +32,18 @@ open class DefaultDispatcher: Dispatcher {
   @inline(__always)
   open func dispatch(strategy: DispatchStrategy, _ block: @escaping () -> Void) {
     switch strategy {
-    // The block is executed immeditely on the same call stack.
     case .immediate:
       block()
-    // The event is always dispatched on the main thread.
     case .mainThread:
       if Thread.isMainThread {
         block()
       } else {
         DispatchQueue.main.async(execute: block)
       }
-    // The event is always dispatched on the main thread, on the next run loop.
     case .nextRunLoop:
       DispatchQueue.main.async(execute: block)
-    // Dispatch the event on the background thread.
     case .backgroundThread:
       DispatchQueue.global().async(execute: block)
-    // The event is dispatched on a (shared) internal serial queue.
     case .serialQueue:
       serialOperationQueue.addOperation(block)
     }
@@ -63,7 +55,7 @@ open class DefaultDispatcher: Dispatcher {
 public protocol Dispatchable {
   /// - note: This can be overridden with a custom *Dispatcher* implementation.
   var dispatcher: Dispatcher { get set }
-  /// The event dispatch strategy.
+  /// The default event dispatch strategy.
   var dispatchStrategy: DispatchStrategy  { get set }
 }
 
@@ -75,10 +67,10 @@ public extension Dispatchable {
   }
 }
 
-// MARK - Observer Registration Strategy
+// MARK: - Observer Registration Strategy
 
 public protocol SynchronizationStrategy  {
-  /// Entry point for customizing the synchronization strategy.
+  /// Synchronize the block of code passed as argument.
   func synchronize( _ block: @escaping () -> Void)
 }
 

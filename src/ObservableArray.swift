@@ -3,7 +3,6 @@ import Foundation
 public protocol ObservableArrayProtocol: Observable, Synchronizable, Dispatchable { }
 
 final public class ObservableArray<T: Equatable>: ObservableArrayProtocol {
-
   /// The associated event emitter.
   public lazy var eventEmitter: EventEmitter<ObservableArray<T>> = {
     return EventEmitter(object: self)
@@ -27,7 +26,7 @@ final public class ObservableArray<T: Equatable>: ObservableArrayProtocol {
     didSet { eventEmitter.synchronizationStrategy = synchronizationStrategy }
   }
 
-  // MARK: Assign
+  // MARK: - Assign
 
   /// Perform the desired change to the array.
   public func assign(changes: @escaping (inout [T]) -> Void) {
@@ -40,7 +39,7 @@ final public class ObservableArray<T: Equatable>: ObservableArrayProtocol {
     }
   }
 
-  // MARK: ObservationTokens
+  // MARK: - ObservationTokens
 
   /// Listen for *ArrayChangeEvent* events.
   /// - parameter onChange: The closure executed whenever the desired event is emitted.
@@ -84,7 +83,7 @@ final public class ObservableArray<T: Equatable>: ObservableArrayProtocol {
     return observer
   }
 
-  // MARK: Private
+  // MARK: - Private
 
   /// Emit the *ArrayChangeEvent*.
   private func onArrayChange(old: [T], new: [T]) {

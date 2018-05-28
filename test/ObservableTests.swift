@@ -11,7 +11,7 @@ class ObservableTests: XCTestCase {
       changeCount += 1
       XCTAssert(event.object === foo)
       XCTAssert(event.attributes.rawValue == EventAttributes.initial.rawValue)
-      XCTAssert(event.id == ObjectChangeEvent.id)
+      XCTAssert(event.id == Event.Id.objectChange)
     }
     XCTAssert(changeCount == 1)
     // Just to silence the variable never used token.
@@ -26,7 +26,7 @@ class ObservableTests: XCTestCase {
     let token = foo.observeObjectChange { event in
       changeCount += 1
       XCTAssert(event.object === foo)
-      XCTAssert(event.id == ObjectChangeEvent.id)
+      XCTAssert(event.id == Event.Id.objectChange)
     }
     foo.bar = "baz"
     XCTAssert(changeCount == 2)
@@ -49,7 +49,7 @@ class ObservableTests: XCTestCase {
     let objChangeToken = foo.observeObjectChange { event in
       objectChangeCount += 1
       XCTAssert(event.object === foo)
-      XCTAssert(event.id == ObjectChangeEvent.id)
+      XCTAssert(event.id == Event.Id.objectChange)
     }
     foo.bar = "baz"
     XCTAssert(propertyChangeCount == 1)
@@ -74,7 +74,7 @@ class ObservableTests: XCTestCase {
     let objChangeToken = foo.observeObjectChange { event in
       objectChangeCount += 1
       XCTAssert(event.object === foo)
-      XCTAssert(event.id == ObjectChangeEvent.id)
+      XCTAssert(event.id == Event.Id.objectChange)
       XCTAssert(event.attributes.rawValue == EventAttributes.initial.rawValue)
     }
     foo.doSomething()
@@ -101,7 +101,7 @@ class ObservableTests: XCTestCase {
     let objChangeToken = foo.observeObjectChange { event in
       objectChangeCount += 1
       XCTAssert(event.object === foo)
-      XCTAssert(event.id == ObjectChangeEvent.id)
+      XCTAssert(event.id == Event.Id.objectChange)
       XCTAssert(event.attributes.rawValue == EventAttributes.initial.rawValue)
     }
     foo.changeSomeValueNotAProperty()
@@ -127,7 +127,7 @@ class ObservableTests: XCTestCase {
     let objChangeToken = foo.observeObjectChange { event in
       objectChangeCount += 1
       XCTAssert(event.object === foo)
-      XCTAssert(event.id == ObjectChangeEvent.id)
+      XCTAssert(event.id == Event.Id.objectChange)
     }
     foo.dynamicBar = "baz"
     XCTAssert(propertyChangeCount == 1)

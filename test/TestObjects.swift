@@ -15,21 +15,18 @@ final class Foo: Observable, Equatable {
   }()
 
   // Test props.
-
   var bar: String = "bar" {
     didSet { emitPropertyChangeEvent(keyPath: \.bar) }
   }
   var baz = "baz"
 
   // Init.
-
   init(bar: String = "bar") {
     self.bar = bar
   }
   init() { }
 
   // Test methods.
-
   func doSomething() {
     let event = Event(id: EventIdentifier.didSomething)
     emitEvent(event)
@@ -42,11 +39,10 @@ final class Foo: Observable, Equatable {
 }
 
 final class ObservableNSFoo: NSObject, Observable {
-  @objc dynamic var dynamicBar: String = "test"
-
   lazy var eventEmitter: EventEmitter<ObservableNSFoo> = {
     return EventEmitter(object: self)
   }()
+  @objc dynamic var dynamicBar: String = "test"
 
   override init() {
     super.init()

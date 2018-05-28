@@ -15,8 +15,8 @@ public class ObservationToken<O: Observable, E: AnyEvent>: Observer {
 
   /// Constructs a new *ObservationToken*.
   /// - parameter id: The identifier for the event that is being observed.
-  /// The default value is *ObjectChangeEvent.id*
-  init(id: EventIdentifier = ObjectChangeEvent.id, onChange: @escaping (E) -> Void) {
+  /// The default value is *Event.Id.objectChange*
+  init(id: EventIdentifier = Event.Id.objectChange, onChange: @escaping (E) -> Void) {
     self.id = id
     self.onChangeBlock = onChange
   }

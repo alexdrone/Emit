@@ -77,8 +77,8 @@ final public class EventEmitter<O: AnyObservable>: EventEmitterProtocol {
   /// - parameter onChange: The closure executed whenever the desired event is emitted.
   func observe<E: AnyEvent>(
     id: EventIdentifier,
-    onChange: @escaping (E) -> Void) -> Token<O, E> {
-
+    onChange: @escaping (E) -> Void
+  ) -> Token<O, E> {
     let observer = ObservationToken<O, E>(id: id, onChange: onChange)
     observer.object = observableObject
     register(observer: observer, for: [id])
@@ -91,8 +91,8 @@ final public class EventEmitter<O: AnyObservable>: EventEmitterProtocol {
   /// - parameter onChange: The closure executed whenever the desired event is emitted.
   func observe<V>(
     keyPath: KeyPath<O, V>,
-    onChange: @escaping (PCEvent<O, V>) -> Void) -> PropertyToken<O, V> {
-
+    onChange: @escaping (PCEvent<O, V>) -> Void
+  ) -> PropertyToken<O, V> {
     let observer = PropertyChangeObservationToken(keyPath: keyPath, onChange: onChange)
     observer.object = observableObject
     register(observer: observer, for: [keyPath.id])
@@ -104,8 +104,8 @@ final public class EventEmitter<O: AnyObservable>: EventEmitterProtocol {
   /// this emitter is not of kind *ArrayChangeEvent<T>*.
   /// - parameter onChange: The closure executed whenever the desired event is emitted.
   func observeArray<T: Equatable>(
-    onChange: @escaping (ArrayChangeEvent<T>) -> Void) -> Token<O, ArrayChangeEvent<T>>? {
-
+    onChange: @escaping (ArrayChangeEvent<T>) -> Void
+  ) -> Token<O, ArrayChangeEvent<T>>? {
     guard let _ = observableObject as? ObservableArray<T> else { return nil }
     return observe(id: Event.Id.arrayChange, onChange: onChange)
   }
@@ -136,8 +136,8 @@ final public class EventEmitter<O: AnyObservable>: EventEmitterProtocol {
     old: V?,
     attributes: EventAttributes,
     debugDescription: String,
-    userInfo: UserInfo?) {
-
+    userInfo: UserInfo?
+  ) -> Void {
     // Sanity check.
     guard let object = observableObject else { return }
     let new = object[keyPath: keyPath]
@@ -167,13 +167,12 @@ final public class EventEmitter<O: AnyObservable>: EventEmitterProtocol {
   public func emitEvent(
     _ event: AnyEvent,
     observer: AnyObserver?,
-    strategy: DispatchStrategy? = nil) {
-
+    strategy: DispatchStrategy? = nil
+  ) -> Void {
     chainedEventEmitter?.emitEvent(event, observer: observer, strategy: strategy)
     let currentStrategy = strategy ?? dispatchStrategy
     dispatcher.dispatch(strategy: currentStrategy) { [weak self] in
       guard let strongSelf = self else { return }
-
       let targets = observer != nil ? [observer!] : strongSelf.observers
       // Notifies the observers.
       for target in targets
@@ -193,8 +192,8 @@ final public class EventEmitter<O: AnyObservable>: EventEmitterProtocol {
   /// - parameter keyPath: The target keyPath.
   func bindKVOToPropertyChangeEvent<N: NSObject & AnyObservable,V>(
     object: N,
-    keyPath: KeyPath<N, V>) {
-
+    keyPath: KeyPath<N, V>
+  ) -> Void {
     synchronize { [weak self] in
       guard let `self` = self else { return }
       let token: NSKeyValueObservation? = object.observe(keyPath, options: [.new, .old, .initial]) {
@@ -218,8 +217,8 @@ final public class EventEmitter<O: AnyObservable>: EventEmitterProtocol {
   /// Unregister the binding between KVO changes and *PropertyChangeEvent*.
   func unbindKVOToPropertyChangeEvent<N: NSObject & AnyObservable,V>(
     object: N,
-    keyPath: KeyPath<N, V>) {
-
+    keyPath: KeyPath<N, V>
+  ) -> Void {
     synchronize { [weak self] in
       guard let `self` = self else { return }
       self.kvoTokens[keyPath.id] = nil

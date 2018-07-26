@@ -20,7 +20,7 @@ public enum DispatchStrategy {
   case serialQueue
 }
 
-final public class DefaultDispatcher: Dispatcher {
+open class DefaultDispatcher: Dispatcher {
   public static let `default` = DefaultDispatcher()
   /// Internal serial dispatch queue.
   public let serialOperationQueue: OperationQueue = {
@@ -30,7 +30,7 @@ final public class DefaultDispatcher: Dispatcher {
   }()
   /// Default dispatcher implementation.
   @inline(__always)
-  public func dispatch(strategy: DispatchStrategy, _ block: @escaping () -> Void) {
+  open func dispatch(strategy: DispatchStrategy, _ block: @escaping () -> Void) {
     switch strategy {
     case .immediate:
       block()

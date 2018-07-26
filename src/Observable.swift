@@ -80,7 +80,8 @@ extension Observable {
     old: V? = nil,
     attributes: EventAttributes = [],
     debugDescription: String = "",
-    userInfo: UserInfo? = nil) {
+    userInfo: UserInfo? = nil
+  ) -> Void {
     eventEmitter.emitPropertyChangeEvent(
       keyPath: keyPath,
       old: old,

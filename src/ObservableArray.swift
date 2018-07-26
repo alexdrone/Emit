@@ -50,8 +50,8 @@ final public class ObservableArray<T: Equatable>: ObservableArrayProtocol {
   /// Listen for *ObjectChangeEvent* events triggered by any of the elements in the array.
   /// - parameter onChange: The closure executed whenever the desired event is emitted.
   public func observeElementChange(
-    onChange: @escaping (ObjectChangeEvent, T, Int) -> Void) -> Observer {
-
+    onChange: @escaping (ObjectChangeEvent, T, Int) -> Void
+  ) -> Observer {
     return observeObjectChange { [weak self] event in
       guard event.object !== self, let `self` = self, let el = event.object as? T else { return }
       self.dispatch { [weak self] in
@@ -69,8 +69,8 @@ final public class ObservableArray<T: Equatable>: ObservableArrayProtocol {
   /// - parameter onChange: The closure executed whenever the desired event is emitted.
   public func observeElementKeyPath<V>(
     keyPath: KeyPath<T, V>,
-    onChange: @escaping (PCEvent<T, V>, T, Int) -> Void) -> Observer? {
-
+    onChange: @escaping (PCEvent<T, V>, T, Int) -> Void
+  ) -> Observer? {
     let observer = observeEvent(id: keyPath.id) { [weak self] (event: PCEvent<T, V>) in
       guard event.object !== self, let `self` = self, let el = event.object as? T else { return }
       self.dispatch { [weak self] in
@@ -109,7 +109,7 @@ final public class ObservableArray<T: Equatable>: ObservableArrayProtocol {
 }
 
 public extension Observer where Self: ObservableArrayProtocol {
-
+  /// Prevents the *observeKeyPath* function to be invoked on ObservableArrays.
   @available(*, unavailable)
   public func observeKeyPath<V>(
     keyPath: KeyPath<Self, V>,
@@ -117,6 +117,7 @@ public extension Observer where Self: ObservableArrayProtocol {
     fatalError()
   }
 
+  /// Prevents the *emitPropertyChangeEvent* function to be invoked on ObservableArrays.
   @available(*, unavailable)
   public func emitPropertyChangeEvent<V>(
     keyPath: KeyPath<Self, V>,

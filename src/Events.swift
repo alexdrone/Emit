@@ -59,8 +59,8 @@ public struct Event: DebuggableEvent {
     object: AnyObservable? = nil,
     attributes: EventAttributes = [],
     userInfo: UserInfo? = nil,
-    debugDescription: String? = nil) {
-
+    debugDescription: String? = nil
+  ) {
     self.id = id
     self.object = object
     self.attributes = attributes
@@ -106,8 +106,8 @@ public struct PropertyChangeEvent<O: AnyObservable, V>: DebuggableEvent {
     old: V? = nil,
     new: V,
     attributes: EventAttributes = [],
-    debugDescription: String? = nil) {
-
+    debugDescription: String? = nil
+  ) {
     self.id = keyPath.id
     self.object = object
     self.oldValue = old
@@ -134,8 +134,8 @@ public struct ValueChangeEvent<V>: DebuggableEvent {
     value: V,
     attributes: EventAttributes = [],
     userInfo: UserInfo? = nil,
-    debugDescription: String? = nil) {
-  
+    debugDescription: String? = nil
+  ) {
     self.id = id
     self.object = object
     self.value = value
@@ -173,13 +173,13 @@ extension AnyKeyPath {
   /// Unique identifier for a keypath.
   public var id: EventIdentifier {
     if let path = _kvcKeyPathString { return path }
-    var hash = hashValue
+    return String(format: "_k[%x]", hashValue)
     // *hashValue* is broken in iOS12
     // so we rely on the fact the KeyPath objects are unique.
     #if swift(>=4.2)
-    hash = Unmanaged.passUnretained(self).toOpaque().hashValue
-    #endif
+    let hash = Unmanaged.passUnretained(self).toOpaque().hashValue
     return String(format: "_k[%x]", hash)
+    #endif
   }
 }
 

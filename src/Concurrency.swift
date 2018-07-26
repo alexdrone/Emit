@@ -30,7 +30,7 @@ final public class DefaultDispatcher: Dispatcher {
   }()
   /// Default dispatcher implementation.
   @inline(__always)
-  open func dispatch(strategy: DispatchStrategy, _ block: @escaping () -> Void) {
+  public func dispatch(strategy: DispatchStrategy, _ block: @escaping () -> Void) {
     switch strategy {
     case .immediate:
       block()

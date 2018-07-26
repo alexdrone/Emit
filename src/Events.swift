@@ -172,7 +172,14 @@ public struct ArrayChangeEvent<T: Equatable>: AnyEvent {
 extension AnyKeyPath {
   /// Unique identifier for a keypath.
   public var id: EventIdentifier {
-    return String(format: "_k[%x]", hashValue)
+    if let path = _kvcKeyPathString { return path }
+    var hash = hashValue
+    // *hashValue* is broken in iOS12
+    // so we rely on the fact the KeyPath objects are unique.
+    #if swift(>=4.2)
+    hash = Unmanaged.passUnretained(self).toOpaque().hashValue
+    #endif
+    return String(format: "_k[%x]", hash)
   }
 }
 

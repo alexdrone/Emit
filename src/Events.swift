@@ -174,12 +174,6 @@ extension AnyKeyPath {
   public var id: EventIdentifier {
     if let path = _kvcKeyPathString { return path }
     return String(format: "_k[%x]", hashValue)
-    // *hashValue* is broken in iOS12
-    // so we rely on the fact the KeyPath objects are unique.
-    #if swift(>=4.2)
-    let hash = Unmanaged.passUnretained(self).toOpaque().hashValue
-    return String(format: "_k[%x]", hash)
-    #endif
   }
 }
 

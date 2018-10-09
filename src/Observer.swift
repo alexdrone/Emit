@@ -13,9 +13,9 @@ public class ObservationToken<O: Observable, E: AnyEvent>: Observer {
   /// The observed object.
   public weak var object: O?
 
-  /// Constructs a new *ObservationToken*.
+  /// Constructs a new `ObservationToken`.
   /// - parameter id: The identifier for the event that is being observed.
-  /// The default value is *Event.Id.objectChange*
+  /// The default value is `Event.Id.objectChange`
   init(id: EventIdentifier = Event.Id.objectChange, onChange: @escaping (E) -> Void) {
     self.id = id
     self.onChangeBlock = onChange
@@ -39,8 +39,8 @@ public class ObservationToken<O: Observable, E: AnyEvent>: Observer {
   }
 }
 
-public class PropertyChangeObservationToken<O: Observable, V>: Token<O, PCEvent<O, V>> {
-  /// Constructs a new *ObservationToken*.
+public class PropertyChangeObservationToken<O: Observable, V>: Token<O, _KpEvent<O, V>> {
+  /// Constructs a new `ObservationToken`.
   /// - parameter id: The keyPath being observed.
   init(keyPath: KeyPath<O, V>, onChange: @escaping (PropertyChangeEvent<O, V>) -> Void) {
     super.init(id: keyPath.id, onChange: onChange)

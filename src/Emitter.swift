@@ -16,28 +16,23 @@ public struct AnyObserver: Equatable {
   }
 }
 
-public protocol EventEmitterProtocol: class, Synchronizable, Dispatchable {
+public protocol EventEmitterProtocol: class, Synchronizable {
   /// All of the events emitted are also going ot be propagate to this emitter (if applicable).
   var chainedEventEmitter: EventEmitterProtocol? { get set }
   /// Emit an event.
-  func emitEvent(_ event: AnyEvent, observer: AnyObserver?, strategy: DispatchStrategy?)
+  func emitEvent(_ event: AnyEvent, observer: AnyObserver?)
 }
 
 final public class EventEmitter<O: AnyObservable>: EventEmitterProtocol {
   /// Reference for the observable object emitting changes.
   public weak var observableObject: O?
-  /// Dispatch the event notifications with the desired *EventDispatchStrategy*.
-  /// - note: This can be overridden with a custom *Dispatcher* implementation.
-  public var dispatcher: Dispatcher = DefaultDispatcher.default
-  /// The event dispatch strategy.
-  public var dispatchStrategy: DispatchStrategy = .immediate
   /// The synchronization strategy used for observers registration/deregistration.
-  public var synchronizationStrategy: SynchronizationStrategy = NonSyncronizedMainThread.default
+  public var synchronizationStrategy: SynchronizationStrategy = NonSynchronizedMainThread.default
   /// All of the events emitted are also going ot be propagate to this emitter (if applicable).
   public weak var chainedEventEmitter: EventEmitterProtocol?
   /// The current registered observers.
   private var observers: [AnyObserver] = []
-  /// Used to track the bindings betwzween KVO and *PropertyChangeEvent*.
+  /// Used to track the bindings betwzween KVO and `PropertyChangeEvent`.
   private var kvoTokens: [String: NSKeyValueObservation] = [:]
 
   /// Constructs a new emitter with the observable object passed as argument.
@@ -72,7 +67,7 @@ final public class EventEmitter<O: AnyObservable>: EventEmitterProtocol {
   // MARK: - ObservationTokens
 
   /// Creates an ad-hoc observer for the event passed as argument.
-  /// The observation lifecycle is linked to the *ObservationToken* lifecycle.
+  /// The observation lifecycle is linked to the `ObservationToken` lifecycle.
   /// - parameter id: The identifier of the event being observed.
   /// - parameter onChange: The closure executed whenever the desired event is emitted.
   func observe<E: AnyEvent>(
@@ -86,12 +81,12 @@ final public class EventEmitter<O: AnyObservable>: EventEmitterProtocol {
   }
 
   /// Creates an ad-hoc observer for the event passed as argument.
-  /// The observation lifecycle is linked to the *ObservationToken* lifecycle.
+  /// The observation lifecycle is linked to the `ObservationToken` lifecycle.
   /// - parameter keyPath: The observed keypath.
   /// - parameter onChange: The closure executed whenever the desired event is emitted.
   func observe<V>(
     keyPath: KeyPath<O, V>,
-    onChange: @escaping (PCEvent<O, V>) -> Void
+    onChange: @escaping (_KpEvent<O, V>) -> Void
   ) -> PropertyToken<O, V> {
     let observer = PropertyChangeObservationToken(keyPath: keyPath, onChange: onChange)
     observer.object = observableObject
@@ -99,9 +94,9 @@ final public class EventEmitter<O: AnyObservable>: EventEmitterProtocol {
     return observer
   }
 
-  /// Listen for *ArrayChangeEvent* events.
-  /// - note: This function is a no-op and returns *nil* if the observed object associated to
-  /// this emitter is not of kind *ArrayChangeEvent<T>*.
+  /// Listen for `ArrayChangeEvent` events.
+  /// - note: This function is a no-op and returns `nil` if the observed object associated to
+  /// this emitter is not of kind `ArrayChangeEvent<T>`.
   /// - parameter onChange: The closure executed whenever the desired event is emitted.
   func observeArray<T: Equatable>(
     onChange: @escaping (ArrayChangeEvent<T>) -> Void
@@ -112,7 +107,7 @@ final public class EventEmitter<O: AnyObservable>: EventEmitterProtocol {
 
   // MARK: - Emit
 
-  /// Emit a *ObjectChange* event.
+  /// Emit a `ObjectChange` event.
   /// - parameter attributes: Additional event qualifiers.
   func emitObjectChangeEvent(attributes: EventAttributes = []) {
     emitObjectChangeEvent(observer: nil, attributes: attributes)
@@ -166,27 +161,22 @@ final public class EventEmitter<O: AnyObservable>: EventEmitterProtocol {
   /// - parameter strategy: The event disptach strategy.
   public func emitEvent(
     _ event: AnyEvent,
-    observer: AnyObserver?,
-    strategy: DispatchStrategy? = nil
+    observer: AnyObserver?
   ) -> Void {
-    chainedEventEmitter?.emitEvent(event, observer: observer, strategy: strategy)
-    let currentStrategy = strategy ?? dispatchStrategy
-    dispatcher.dispatch(strategy: currentStrategy) { [weak self] in
-      guard let strongSelf = self else { return }
-      let targets = observer != nil ? [observer!] : strongSelf.observers
+    chainedEventEmitter?.emitEvent(event, observer: observer)
+      let targets = observer != nil ? [observer!] : observers
       // Notifies the observers.
       for target in targets
         where target.events.contains(event.id) || event.id == Event.Id.all {
           guard let observer = target.observer else { continue }
           observer.onChange(event: event)
       }
-    }
   }
 
   // MARK: - KVO Binding
 
-  /// Whenever a KVO change for *object* is triggered, a *PropertyChangeEvent*
-  /// (and an associated *ObjectChangeEvent*) is emitted to all of the registered observers.
+  /// Whenever a KVO change for `object` is triggered, a `PropertyChangeEvent`
+  /// (and an associated `ObjectChangeEvent`) is emitted to all of the registered observers.
   /// This is a convenient way to unify the object event propagation.
   /// - parameter object: The object being KVO observed.
   /// - parameter keyPath: The target keyPath.
@@ -214,7 +204,7 @@ final public class EventEmitter<O: AnyObservable>: EventEmitterProtocol {
     }
   }
 
-  /// Unregister the binding between KVO changes and *PropertyChangeEvent*.
+  /// Unregister the binding between KVO changes and `PropertyChangeEvent`.
   func unbindKVOToPropertyChangeEvent<N: NSObject & AnyObservable,V>(
     object: N,
     keyPath: KeyPath<N, V>

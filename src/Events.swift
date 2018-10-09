@@ -3,15 +3,21 @@ import Foundation
 // MARK: - Identifiers
 
 public extension Event.Id {
-  public static let objectChange: EventIdentifier = "_object"
-  public static let arrayChange: EventIdentifier = "_array"
-  public static let all: EventIdentifier = "_all"
+  /// This is the `EventIdentifier` propagated to a observer that is listening for
+  /// `observeObjectChange` for a given object.
+  public static let objectChange: EventIdentifier = "__object"
+  /// This is the `EventIdentifier` propagated to a observer that is listening for
+  /// `observeArrayChange` for a given object.
+  public static let arrayChange: EventIdentifier = "__array"
+  /// This is the `EventIdentifier` that can be passed to `register(observer:for events:)` whenever
+  /// The observer is interesting in listening to every event emitted by the observed object.
+  public static let all: EventIdentifier = "__all"
 }
 
 // MARK: - Attributes
 
-@_fixed_layout
-public struct EventAttributes: OptionSet {
+/// Additional attributes that can be passed down to the observer whenever an event is emitted.
+@_fixed_layout public struct EventAttributes: OptionSet {
   /// The raw represenation for this option.
   public let rawValue: Int
   /// You can use this additional, one-time notification to establish the initial value of a
@@ -27,6 +33,7 @@ public struct EventAttributes: OptionSet {
 
 // MARK: - Protocols
 
+/// Type-erased event.
 public protocol AnyEvent {
   /// The event unique identifier.
   var id: EventIdentifier { get }
@@ -46,15 +53,16 @@ public protocol DebuggableEvent: AnyEvent {
 
 // MARK: - Events
 
-@_fixed_layout
-public struct Event: DebuggableEvent {
+/// A user-defined event.
+/// This can be used to notify custom events to observers.
+@_fixed_layout public struct Event: DebuggableEvent {
   public let id: EventIdentifier
   public weak var object: AnyObservable?
   public let attributes: EventAttributes
   public let debugDescription: String?
   public var userInfo: UserInfo?
 
-  /// Creates a new *ObjectChange* event.
+  /// Creates a new `ObjectChange` event.
   public init(id: String,
     object: AnyObservable? = nil,
     attributes: EventAttributes = [],
@@ -71,15 +79,15 @@ public struct Event: DebuggableEvent {
   final public class Id { }
 }
 
-@_fixed_layout
-public struct ObjectChangeEvent: DebuggableEvent {
+/// Event propagated to a observer that is listening for `observeObjectChange`.
+@_fixed_layout public struct ObjectChangeEvent: DebuggableEvent {
   public let id: String = Event.Id.objectChange
   public weak var object: AnyObservable?
   public let debugDescription: String?
   public let attributes: EventAttributes
   public var userInfo: UserInfo?
 
-  /// Creates a new *ObjectChange* event.
+  /// Creates a new `ObjectChange` event.
   init(object: AnyObservable, attributes: EventAttributes = [], debugDescription: String? = nil) {
     self.object = object
     self.attributes = attributes
@@ -87,8 +95,8 @@ public struct ObjectChangeEvent: DebuggableEvent {
   }
 }
 
-@_fixed_layout
-public struct PropertyChangeEvent<O: AnyObservable, V>: DebuggableEvent {
+/// Event propagated to a observer that is listening for `observeKeyPath`.
+@_fixed_layout public struct PropertyChangeEvent<O: AnyObservable, V>: DebuggableEvent {
   public let id: EventIdentifier
   public weak var object: AnyObservable?
   public let attributes: EventAttributes
@@ -117,8 +125,8 @@ public struct PropertyChangeEvent<O: AnyObservable, V>: DebuggableEvent {
   }
 }
 
-@_fixed_layout
-public struct ValueChangeEvent<V>: DebuggableEvent {
+/// Used to propagate a synthesized value and not a property change.
+@_fixed_layout public struct ValueChangeEvent<V>: DebuggableEvent {
   public let id: EventIdentifier
   public weak var object: AnyObservable?
   public let attributes: EventAttributes
@@ -127,7 +135,7 @@ public struct ValueChangeEvent<V>: DebuggableEvent {
   /// The value associated to this event.
   public let value: V
 
-  /// Creates a new *ValueChangeEvent* event.
+  /// Creates a new `ValueChangeEvent` event.
   public init(
     id: String,
     object: AnyObservable? = nil,
@@ -145,8 +153,8 @@ public struct ValueChangeEvent<V>: DebuggableEvent {
   }
 }
 
-@_fixed_layout
-public struct ArrayChangeEvent<T: Equatable>: AnyEvent {
+/// Event propagated to a observer that is listening for `observeArrayChange`.
+@_fixed_layout public struct ArrayChangeEvent<T: Equatable>: AnyEvent {
   public let id: EventIdentifier
   public var object: AnyObservable? { return observableArray }
   public let attributes: EventAttributes = []
@@ -158,7 +166,7 @@ public struct ArrayChangeEvent<T: Equatable>: AnyEvent {
   /// The new collection.
   public let new: [T]
 
-  /// Creates a new *ArrayChangeEvent* event.
+  /// Creates a new `ArrayChangeEvent` event.
   public init(object: ObservableArray<T>? = nil, old: [T], new: [T]) {
     self.id = Event.Id.arrayChange
     self.observableArray = object
@@ -177,7 +185,9 @@ extension AnyKeyPath {
   }
 }
 
-public typealias EventIdentifier =  String
+public typealias EventIdentifier = String
 public typealias UserInfo = [String: Any]
-public typealias PCEvent = PropertyChangeEvent
-public typealias OCEvent = ObjectChangeEvent
+/// Internal shortcut for `PropertyChangeEvent`.
+public typealias _KpEvent = PropertyChangeEvent
+/// Internal shortcut for `ObjectChangeEvent`.
+public typealias _ObjEvent = ObjectChangeEvent

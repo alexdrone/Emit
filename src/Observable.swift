@@ -34,15 +34,15 @@ extension Observable {
 
   // MARK: - ObservationTokens
 
-  /// Ad-hoc observer that reacts to *ObjectChangeEvent* events.
-  /// - parameter onChange: The closure executed whenever the *ObjectChangeEvent* event is emitted.
+  /// Ad-hoc observer that reacts to `ObjectChangeEvent` events.
+  /// - parameter onChange: The closure executed whenever the `ObjectChangeEvent` event is emitted.
   public func observeObjectChange(
-    onChange: @escaping (ObjectChangeEvent) -> Void) -> Token<Self, OCEvent> {
+    onChange: @escaping (ObjectChangeEvent) -> Void) -> Token<Self, _ObjEvent> {
     return observeEvent(id: Event.Id.objectChange, onChange: onChange)
   }
 
   /// Creates an ad-hoc observer for the event passed as argument.
-  /// The observation lifecycle is linked to the *ObservationToken* lifecycle.
+  /// The observation lifecycle is linked to the `ObservationToken` lifecycle.
   /// - parameter id: The identifier of the event being observed.
   /// - parameter onChange: The closure executed whenever the desired event is emitted.
   public func observeEvent<E: AnyEvent>(
@@ -52,18 +52,18 @@ extension Observable {
   }
 
   /// Creates an ad-hoc observer for the property change associated to the given keypath.
-  /// The observation lifecycle is linked to the *ObservationToken* lifecycle.
+  /// The observation lifecycle is linked to the `ObservationToken` lifecycle.
   /// - parameter keyPath: The observed keypath.
   /// - parameter onChange: The closure executed whenever the desired event is emitted.
   public func observeKeyPath<V>(
     keyPath: KeyPath<Self, V>,
-    onChange: @escaping (PCEvent<Self, V>) -> Void) -> PropertyToken<Self, V> {
+    onChange: @escaping (_KpEvent<Self, V>) -> Void) -> PropertyToken<Self, V> {
     return eventEmitter.observe(keyPath: keyPath, onChange: onChange)
   }
 
   // MARK: - Registration
 
-  /// Emit a *ObjectChange* event.
+  /// Emit a `ObjectChange` event.
   /// - parameter attributes: Additional event qualifiers.
   public func emitObjectChangeEvent(attributes: EventAttributes = []) {
     eventEmitter.emitObjectChangeEvent(attributes: attributes)
@@ -101,15 +101,15 @@ extension Observable {
 
 extension Observable where Self: NSObject {
 
-  /// Whenever a KVO change is triggered, a *PropertyChangeEvent*
-  /// (and an associated *ObjectChangeEvent*) is emitted to all of the registered observers.
+  /// Whenever a KVO change is triggered, a `PropertyChangeEvent`
+  /// (and an associated `ObjectChangeEvent`) is emitted to all of the registered observers.
   /// This is a convenient way to unify the object event propagation.
   /// - parameter keyPath: The target keyPath.
   public func bindKVOToPropertyChangeEvent<V>(keyPath: KeyPath<Self, V>) {
     eventEmitter.bindKVOToPropertyChangeEvent(object: self, keyPath: keyPath)
   }
 
-  /// Unregister the binding between KVO changes and *PropertyChangeEvent*.
+  /// Unregister the binding between KVO changes and `PropertyChangeEvent`.
   public func unbindKVOToPropertyChangeEvent<V>(keyPath: KeyPath<Self, V>) {
     eventEmitter.unbindKVOToPropertyChangeEvent(object: self, keyPath: keyPath)
   }

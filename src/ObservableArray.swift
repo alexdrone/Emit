@@ -1,6 +1,6 @@
 import Foundation
 
-public protocol ObservableArrayProtocol: Observable, Synchronizable, Dispatchable { }
+public protocol ObservableArrayProtocol: Observable, Synchronizable { }
 
 final public class ObservableArray<T: Equatable>: ObservableArrayProtocol {
   /// The associated event emitter.
@@ -14,16 +14,14 @@ final public class ObservableArray<T: Equatable>: ObservableArrayProtocol {
       onArrayChange(old: oldValue, new: new)
     }
   }
-  /// - note: This can be overridden with a custom *Dispatcher* implementation.
-  public var dispatcher: Dispatcher = DefaultDispatcher.default
-  /// The event dispatch strategy.
-  public var dispatchStrategy: DispatchStrategy = .immediate {
-    didSet { eventEmitter.dispatchStrategy = dispatchStrategy }
-  }
   /// The synchronization strategy used for observers registration/deregistration and for
   /// array changes.
-  public var synchronizationStrategy: SynchronizationStrategy = NonSyncronizedMainThread.default {
+  public var synchronizationStrategy: SynchronizationStrategy = NonSynchronizedMainThread.default {
     didSet { eventEmitter.synchronizationStrategy = synchronizationStrategy }
+  }
+
+  public func dispatch(_ block: () -> Void) {
+    block()
   }
 
   // MARK: - Assign
@@ -41,13 +39,13 @@ final public class ObservableArray<T: Equatable>: ObservableArrayProtocol {
 
   // MARK: - ObservationTokens
 
-  /// Listen for *ArrayChangeEvent* events.
+  /// Listen for `ArrayChangeEvent` events.
   /// - parameter onChange: The closure executed whenever the desired event is emitted.
   public func observeArrayChange(onChange: @escaping (ArrayChangeEvent<T>) -> Void) -> Observer {
     return eventEmitter.observeArray(onChange: onChange)!
   }
 
-  /// Listen for *ObjectChangeEvent* events triggered by any of the elements in the array.
+  /// Listen for `ObjectChangeEvent` events triggered by any of the elements in the array.
   /// - parameter onChange: The closure executed whenever the desired event is emitted.
   public func observeElementChange(
     onChange: @escaping (ObjectChangeEvent, T, Int) -> Void
@@ -64,14 +62,14 @@ final public class ObservableArray<T: Equatable>: ObservableArrayProtocol {
   }
 
   /// Creates an ad-hoc observer for the property change associated to the given keypath.
-  /// The observation lifecycle is linked to the *ObservationToken* lifecycle.
+  /// The observation lifecycle is linked to the `ObservationToken` lifecycle.
   /// - parameter keyPath: The observed keypath.
   /// - parameter onChange: The closure executed whenever the desired event is emitted.
   public func observeElementKeyPath<V>(
     keyPath: KeyPath<T, V>,
-    onChange: @escaping (PCEvent<T, V>, T, Int) -> Void
+    onChange: @escaping (_KpEvent<T, V>, T, Int) -> Void
   ) -> Observer? {
-    let observer = observeEvent(id: keyPath.id) { [weak self] (event: PCEvent<T, V>) in
+    let observer = observeEvent(id: keyPath.id) { [weak self] (event: _KpEvent<T, V>) in
       guard event.object !== self, let `self` = self, let el = event.object as? T else { return }
       self.dispatch { [weak self] in
         // Find the index for the object that triggered the event (if applicable).
@@ -85,7 +83,7 @@ final public class ObservableArray<T: Equatable>: ObservableArrayProtocol {
 
   // MARK: - Private
 
-  /// Emit the *ArrayChangeEvent*.
+  /// Emit the `ArrayChangeEvent`.
   private func onArrayChange(old: [T], new: [T]) {
     dispatch { [weak self] in
       // Equality check.
@@ -109,15 +107,15 @@ final public class ObservableArray<T: Equatable>: ObservableArrayProtocol {
 }
 
 public extension Observer where Self: ObservableArrayProtocol {
-  /// Prevents the *observeKeyPath* function to be invoked on ObservableArrays.
+  /// Prevents the `observeKeyPath` function to be invoked on ObservableArrays.
   @available(*, unavailable)
   public func observeKeyPath<V>(
     keyPath: KeyPath<Self, V>,
-    onChange: @escaping (PCEvent<Self, V>) -> Void) -> PropertyToken<Self, V> {
+    onChange: @escaping (_KpEvent<Self, V>) -> Void) -> PropertyToken<Self, V> {
     fatalError()
   }
 
-  /// Prevents the *emitPropertyChangeEvent* function to be invoked on ObservableArrays.
+  /// Prevents the `emitPropertyChangeEvent` function to be invoked on ObservableArrays.
   @available(*, unavailable)
   public func emitPropertyChangeEvent<V>(
     keyPath: KeyPath<Self, V>,

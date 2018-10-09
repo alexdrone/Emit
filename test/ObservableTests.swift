@@ -6,7 +6,7 @@ class ObservableTests: XCTestCase {
   func testInitialObjectChangeEvent() {
     var changeCount = 0
     let foo = Foo()
-    // An *ObjectChange* event is trigger on registration with attributes '.initial'.
+    // An `ObjectChange` event is trigger on registration with attributes '.initial'.
     let token = foo.observeObjectChange { event in
       changeCount += 1
       XCTAssert(event.object === foo)
@@ -21,8 +21,8 @@ class ObservableTests: XCTestCase {
   func testObjectChangeEvent() {
     var changeCount = 0
     let foo = Foo()
-    // An *ObjectChange* event is trigger on registration with attributes '.initial'.
-    // For every *PropertyChangeEvent* emitted, a *ObjectChange* is emitted too.
+    // An `ObjectChange` event is trigger on registration with attributes '.initial'.
+    // For every `PropertyChangeEvent` emitted, a `ObjectChange` is emitted too.
     let token = foo.observeObjectChange { event in
       changeCount += 1
       XCTAssert(event.object === foo)
@@ -38,14 +38,14 @@ class ObservableTests: XCTestCase {
     var propertyChangeCount = 0
     var objectChangeCount = 0
     let foo = Foo()
-    // A change to *foo.bar* will trigger a *PropertyChangeEvent*.
+    // A change to `foo.bar` will trigger a `PropertyChangeEvent`.
     let token = foo.observeKeyPath(keyPath: \.bar) { event in
       propertyChangeCount += 1
       XCTAssert(event.object === foo)
       XCTAssert(event.newValue == "baz")
     }
-    // An *ObjectChange* event is trigger on registration with attributes '.initial'.
-    // For every *PropertyChangeEvent* emitted, a *ObjectChange* is emitted too.
+    // An `ObjectChange` event is trigger on registration with attributes '.initial'.
+    // For every `PropertyChangeEvent` emitted, a `ObjectChange` is emitted too.
     let objChangeToken = foo.observeObjectChange { event in
       objectChangeCount += 1
       XCTAssert(event.object === foo)
@@ -63,14 +63,14 @@ class ObservableTests: XCTestCase {
     var objectChangeCount = 0
     var eventChangeCount = 0
     let foo = Foo()
-    // *doSomething* in foo triggers *didSomething*.
+    // `doSomething` in foo triggers `didSomething`.
     let id = Foo.EventIdentifier.didSomething
     let token = foo.observeEvent(id: id){ (event: Event)  in
       eventChangeCount += 1
       XCTAssert(event.id == id)
     }
-    // An *ObjectChange* event is trigger on registration with attributes '.initial'.
-    // No *ObjectChange notification is triggered when a custom event is emitted.
+    // An `ObjectChange` event is trigger on registration with attributes '.initial'.
+    // No `ObjectChange notification is triggered when a custom event is emitted.
     let objChangeToken = foo.observeObjectChange { event in
       objectChangeCount += 1
       XCTAssert(event.object === foo)
@@ -89,15 +89,15 @@ class ObservableTests: XCTestCase {
     var objectChangeCount = 0
     var eventChangeCount = 0
     let foo = Foo()
-    // *changeSomeValueNotAProperty* in foo triggers *didChangeSomeValue*.
+    // `changeSomeValueNotAProperty` in foo triggers `didChangeSomeValue`.
     let id = Foo.EventIdentifier.didChangeSomeValue
     let token = foo.observeEvent(id: id){ (event: ValueChangeEvent<Int>)  in
       eventChangeCount += 1
       XCTAssert(event.id == id)
       XCTAssert(event.value == 42)
     }
-    // An *ObjectChange* event is trigger on registration with attributes '.initial'.
-    // No *ObjectChange notification is triggered when a custom event is emitted.
+    // An `ObjectChange` event is trigger on registration with attributes '.initial'.
+    // No `ObjectChange notification is triggered when a custom event is emitted.
     let objChangeToken = foo.observeObjectChange { event in
       objectChangeCount += 1
       XCTAssert(event.object === foo)
@@ -116,14 +116,14 @@ class ObservableTests: XCTestCase {
     var objectChangeCount = 0
     var propertyChangeCount = 0
     let foo = ObservableNSFoo()
-    // A change to *foo.bar* will trigger a *PropertyChangeEvent*.
+    // A change to `foo.bar` will trigger a `PropertyChangeEvent`.
     let token = foo.observeKeyPath(keyPath: \.dynamicBar) { event in
       propertyChangeCount += 1
       XCTAssert(event.object === foo)
       XCTAssert(event.newValue == "baz")
     }
-    // An *ObjectChange* event is trigger on registration with attributes '.initial'.
-    // For every *PropertyChangeEvent* emitted, a *ObjectChange* is emitted too.
+    // An `ObjectChange` event is trigger on registration with attributes '.initial'.
+    // For every `PropertyChangeEvent` emitted, a `ObjectChange` is emitted too.
     let objChangeToken = foo.observeObjectChange { event in
       objectChangeCount += 1
       XCTAssert(event.object === foo)

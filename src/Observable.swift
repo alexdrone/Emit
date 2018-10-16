@@ -11,6 +11,13 @@ public protocol Observable: AnyObservable {
   var eventEmitter: EventEmitter<Self> { get }
 }
 
+public extension Observable {
+  /// Build the `EventEmitter` instance for this observable object.
+  public func makeEventEmitter() -> EventEmitter<Self> {
+    return EventEmitter(object: self);
+  }
+}
+
 extension Observable {
   /// Internal only.
   /// Type-erased event emitter.

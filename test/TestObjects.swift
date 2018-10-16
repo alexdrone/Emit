@@ -2,46 +2,50 @@ import Foundation
 import XCTest
 @testable import Emit
 
-final class Foo: Observable, Equatable {
-  struct EventIdentifier {
-    static let didSomething = "ObservableFoo.didSomething"
-    static let didChangeSomeValue = "ObservableFoo.didChangeSomeValueg"
-  }
-  public static func == (lhs: Foo, rhs: Foo) -> Bool {
-    return lhs.bar == rhs.bar && lhs.baz == rhs.baz
-  }
-  lazy var eventEmitter: EventEmitter<Foo> = {
-    return EventEmitter(object: self)
-  }()
+// MARK: Foo
 
-  // Test props.
+final class Foo: Observable {
+  /// The event emitter.
+  lazy var eventEmitter = makeEventEmitter()
+  /// A observable property.
   var bar: String = "bar" {
     didSet { emitPropertyChangeEvent(keyPath: \.bar) }
   }
+  /// A non-observable property.
   var baz = "baz"
-
-  // Init.
+  /// Init.
   init(bar: String = "bar") {
     self.bar = bar
   }
   init() { }
 
-  // Test methods.
+  /// Test method that trigger an event.
   func doSomething() {
-    let event = Event(id: EventIdentifier.didSomething)
+    let event = Event(id: Id.didSomething)
     emitEvent(event)
   }
-
+  /// Test method that trigger a value change event.
   func changeSomeValueNotAProperty() {
-    let event = ValueChangeEvent(id: EventIdentifier.didChangeSomeValue, value: 42)
+    let event = ValueChangeEvent(id: Id.didChangeSomeValue, value: 42)
     emitEvent(event)
   }
 }
 
+extension Foo: Equatable {
+  public static func == (lhs: Foo, rhs: Foo) -> Bool {
+    return lhs.bar == rhs.bar && lhs.baz == rhs.baz
+  }
+}
+
+extension Foo {
+  struct Id {
+    static let didSomething = "ObservableFoo.didSomething"
+    static let didChangeSomeValue = "ObservableFoo.didChangeSomeValueg"
+  }
+}
+
 final class ObservableNSFoo: NSObject, Observable {
-  lazy var eventEmitter: EventEmitter<ObservableNSFoo> = {
-    return EventEmitter(object: self)
-  }()
+  lazy var eventEmitter = makeEventEmitter()
   @objc dynamic var dynamicBar: String = "test"
 
   override init() {

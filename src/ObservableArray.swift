@@ -19,10 +19,12 @@ final public class ObservableArray<T: Equatable>: ObservableArrayProtocol {
   public var synchronizationStrategy: SynchronizationStrategy = NonSynchronizedMainThread.default {
     didSet { eventEmitter.synchronizationStrategy = synchronizationStrategy }
   }
-
-  public func dispatch(_ block: () -> Void) {
-    block()
-  }
+  /// The dispatch function.
+  /// Override this closure if you wish to process the array changes on a thread different
+  /// from the main thread.
+  /// - note: Events are going to be dispatched on the thread the block passed as argument is
+  /// dispatched to.
+  public var dispatch = { (block: () -> Void) in block() }
 
   // MARK: - Assign
 

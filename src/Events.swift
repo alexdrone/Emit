@@ -181,6 +181,7 @@ extension AnyKeyPath {
   /// Unique identifier for a keypath.
   public var id: EventIdentifier {
     if let path = _kvcKeyPathString { return path }
+    print("warning: retrieving the `id` of a non-KVC property.")
     return String(format: "_k[%x]", hashValue)
   }
 }

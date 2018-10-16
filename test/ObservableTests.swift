@@ -64,7 +64,7 @@ class ObservableTests: XCTestCase {
     var eventChangeCount = 0
     let foo = Foo()
     // `doSomething` in foo triggers `didSomething`.
-    let id = Foo.EventIdentifier.didSomething
+    let id = Foo.Id.didSomething
     let token = foo.observeEvent(id: id){ (event: Event)  in
       eventChangeCount += 1
       XCTAssert(event.id == id)
@@ -90,7 +90,7 @@ class ObservableTests: XCTestCase {
     var eventChangeCount = 0
     let foo = Foo()
     // `changeSomeValueNotAProperty` in foo triggers `didChangeSomeValue`.
-    let id = Foo.EventIdentifier.didChangeSomeValue
+    let id = Foo.Id.didChangeSomeValue
     let token = foo.observeEvent(id: id){ (event: ValueChangeEvent<Int>)  in
       eventChangeCount += 1
       XCTAssert(event.id == id)

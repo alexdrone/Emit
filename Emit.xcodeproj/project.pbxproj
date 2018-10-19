@@ -7,24 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1600F83820BC9A13000DC58E /* TestObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1600F83720BC9A13000DC58E /* TestObjects.swift */; };
-		1606203B20B418B4008175E2 /* Concurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1606203A20B418B4008175E2 /* Concurrency.swift */; };
-		1606203C20B418BE008175E2 /* Concurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1606203A20B418B4008175E2 /* Concurrency.swift */; };
-		16870D8020BB380E003CC80A /* ObservableArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16870D7F20BB380E003CC80A /* ObservableArray.swift */; };
-		16870D8120BB3819003CC80A /* ObservableArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16870D7F20BB380E003CC80A /* ObservableArray.swift */; };
-		16D1A5BA20BC789F003E6ED3 /* ObservableArrayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D1A5B920BC789F003E6ED3 /* ObservableArrayTests.swift */; };
+		161D2725217A1669009F3190 /* ObservableRef.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161D2724217A1669009F3190 /* ObservableRef.swift */; };
+		161D2726217A1669009F3190 /* ObservableRef.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161D2724217A1669009F3190 /* ObservableRef.swift */; };
+		BF_129607191749 /* ObservableArrayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_755302428294 /* ObservableArrayTests.swift */; };
 		BF_132977660500 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_640820736363 /* Observable.swift */; };
 		BF_156289899039 /* Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_826643526656 /* Observer.swift */; };
+		BF_219463214098 /* ObservableArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_855410634112 /* ObservableArray.swift */; };
 		BF_234138615172 /* Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_826643526656 /* Observer.swift */; };
+		BF_317860559534 /* Concurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_908212359979 /* Concurrency.swift */; };
 		BF_374814582398 /* Emit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FR_236718980560 /* Emit.framework */; };
-		BF_630342938997 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_244407894630 /* Events.swift */; };
+		BF_426463481000 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_739033256418 /* Events.swift */; };
+		BF_466189359724 /* Emitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_449466757824 /* Emitter.swift */; };
+		BF_536913368791 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_739033256418 /* Events.swift */; };
+		BF_620142843558 /* Concurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_908212359979 /* Concurrency.swift */; };
 		BF_634522689025 /* ObservableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_409147405849 /* ObservableTests.swift */; };
-		BF_753730078176 /* Emitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_664439253323 /* Emitter.swift */; };
-		BF_785924986561 /* Emitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_664439253323 /* Emitter.swift */; };
-		BF_789422606948 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_244407894630 /* Events.swift */; };
+		BF_701837829840 /* TestObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_682478902642 /* TestObjects.swift */; };
+		BF_776816222598 /* Emitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_449466757824 /* Emitter.swift */; };
 		BF_811593590121 /* Observable.h in Headers */ = {isa = PBXBuildFile; fileRef = FR_282239236428 /* Observable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BF_818027908982 /* Observable.h in Headers */ = {isa = PBXBuildFile; fileRef = FR_282239236428 /* Observable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BF_848468247095 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_640820736363 /* Observable.swift */; };
+		BF_890017292414 /* ObservableArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_855410634112 /* ObservableArray.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,21 +40,22 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1600F83720BC9A13000DC58E /* TestObjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestObjects.swift; sourceTree = "<group>"; };
-		1606203A20B418B4008175E2 /* Concurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Concurrency.swift; sourceTree = "<group>"; };
-		16870D7F20BB380E003CC80A /* ObservableArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableArray.swift; sourceTree = "<group>"; };
-		16D1A5B920BC789F003E6ED3 /* ObservableArrayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableArrayTests.swift; sourceTree = "<group>"; };
+		161D2724217A1669009F3190 /* ObservableRef.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableRef.swift; sourceTree = "<group>"; };
 		FR_236718980560 /* Emit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Emit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		FR_244407894630 /* Events.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
 		FR_282239236428 /* Observable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Observable.h; sourceTree = "<group>"; };
 		FR_409147405849 /* ObservableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableTests.swift; sourceTree = "<group>"; };
+		FR_449466757824 /* Emitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emitter.swift; sourceTree = "<group>"; };
 		FR_456968685412 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		FR_479945003232 /* Test.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Test.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FR_479945003232 /* Test.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = Test.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FR_493811752375 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FR_620523922009 /* Emit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Emit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FR_640820736363 /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
-		FR_664439253323 /* Emitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emitter.swift; sourceTree = "<group>"; };
+		FR_682478902642 /* TestObjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestObjects.swift; sourceTree = "<group>"; };
+		FR_739033256418 /* Events.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
+		FR_755302428294 /* ObservableArrayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableArrayTests.swift; sourceTree = "<group>"; };
 		FR_826643526656 /* Observer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observer.swift; sourceTree = "<group>"; };
+		FR_855410634112 /* ObservableArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableArray.swift; sourceTree = "<group>"; };
+		FR_908212359979 /* Concurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Concurrency.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,14 +73,15 @@
 		G_4799450059734 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				1606203A20B418B4008175E2 /* Concurrency.swift */,
-				FR_244407894630 /* Events.swift */,
-				FR_664439253323 /* Emitter.swift */,
+				FR_908212359979 /* Concurrency.swift */,
+				FR_449466757824 /* Emitter.swift */,
+				FR_739033256418 /* Events.swift */,
 				FR_456968685412 /* Info.plist */,
 				FR_282239236428 /* Observable.h */,
 				FR_640820736363 /* Observable.swift */,
-				16870D7F20BB380E003CC80A /* ObservableArray.swift */,
+				FR_855410634112 /* ObservableArray.swift */,
 				FR_826643526656 /* Observer.swift */,
+				161D2724217A1669009F3190 /* ObservableRef.swift */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -86,9 +90,9 @@
 			isa = PBXGroup;
 			children = (
 				FR_493811752375 /* Info.plist */,
+				FR_755302428294 /* ObservableArrayTests.swift */,
 				FR_409147405849 /* ObservableTests.swift */,
-				16D1A5B920BC789F003E6ED3 /* ObservableArrayTests.swift */,
-				1600F83720BC9A13000DC58E /* TestObjects.swift */,
+				FR_682478902642 /* TestObjects.swift */,
 			);
 			path = test;
 			sourceTree = "<group>";
@@ -192,14 +196,6 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0930;
-				TargetAttributes = {
-					NT_236718980560 = {
-						LastSwiftMigration = 1000;
-					};
-					NT_479945003232 = {
-						LastSwiftMigration = 1000;
-					};
-				};
 			};
 			buildConfigurationList = CL_479945004516 /* Build configuration list for PBXProject "Emit" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -224,11 +220,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BF_789422606948 /* Events.swift in Sources */,
-				16870D8020BB380E003CC80A /* ObservableArray.swift in Sources */,
-				BF_753730078176 /* Emitter.swift in Sources */,
-				1606203B20B418B4008175E2 /* Concurrency.swift in Sources */,
+				BF_317860559534 /* Concurrency.swift in Sources */,
+				BF_466189359724 /* Emitter.swift in Sources */,
+				BF_426463481000 /* Events.swift in Sources */,
 				BF_132977660500 /* Observable.swift in Sources */,
+				161D2725217A1669009F3190 /* ObservableRef.swift in Sources */,
+				BF_890017292414 /* ObservableArray.swift in Sources */,
 				BF_156289899039 /* Observer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -237,9 +234,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16D1A5BA20BC789F003E6ED3 /* ObservableArrayTests.swift in Sources */,
+				BF_129607191749 /* ObservableArrayTests.swift in Sources */,
 				BF_634522689025 /* ObservableTests.swift in Sources */,
-				1600F83820BC9A13000DC58E /* TestObjects.swift in Sources */,
+				BF_701837829840 /* TestObjects.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -247,11 +244,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BF_630342938997 /* Events.swift in Sources */,
-				16870D8120BB3819003CC80A /* ObservableArray.swift in Sources */,
-				BF_785924986561 /* Emitter.swift in Sources */,
-				1606203C20B418BE008175E2 /* Concurrency.swift in Sources */,
+				BF_620142843558 /* Concurrency.swift in Sources */,
+				BF_776816222598 /* Emitter.swift in Sources */,
+				BF_536913368791 /* Events.swift in Sources */,
 				BF_848468247095 /* Observable.swift in Sources */,
+				161D2726217A1669009F3190 /* ObservableRef.swift in Sources */,
+				BF_219463214098 /* ObservableArray.swift in Sources */,
 				BF_234138615172 /* Observer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -274,7 +272,6 @@
 				INFOPLIST_FILE = test/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -297,7 +294,6 @@
 				PRODUCT_NAME = Emit;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -404,7 +400,6 @@
 				PRODUCT_NAME = Emit;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -440,7 +435,6 @@
 				INFOPLIST_FILE = test/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;

@@ -25,7 +25,7 @@ targets:
     platform: [iOS, macOS]
     type: framework
 
-    sources: 
+    sources:
       - src
     settings:
       base:

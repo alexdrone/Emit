@@ -12,7 +12,9 @@
 		161D2705217A14BB009F3190 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 161D2703217A14BB009F3190 /* Main.storyboard */; };
 		161D2707217A14BC009F3190 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 161D2706217A14BC009F3190 /* Assets.xcassets */; };
 		161D270A217A14BC009F3190 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 161D2708217A14BC009F3190 /* LaunchScreen.storyboard */; };
-		161D2723217A1513009F3190 /* SwiftProtobuf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 161D2722217A1513009F3190 /* SwiftProtobuf.framework */; };
+		167A238D217B324200BA6EFD /* model.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167A2389217B324200BA6EFD /* model.pb.swift */; };
+		167A2391217B32A100BA6EFD /* SwiftProtobuf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 161D2722217A1513009F3190 /* SwiftProtobuf.framework */; };
+		167A2392217B32A100BA6EFD /* SwiftProtobuf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 161D2722217A1513009F3190 /* SwiftProtobuf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +41,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		167A2393217B32A100BA6EFD /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				167A2392217B32A100BA6EFD /* SwiftProtobuf.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		161D26FC217A14BB009F3190 /* emit_demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = emit_demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		161D26FF217A14BB009F3190 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -49,6 +65,7 @@
 		161D270B217A14BC009F3190 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		161D2711217A14FC009F3190 /* Emit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Emit.xcodeproj; path = ../Emit.xcodeproj; sourceTree = "<group>"; };
 		161D2722217A1513009F3190 /* SwiftProtobuf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftProtobuf.framework; path = frameworks/iOS/SwiftProtobuf.framework; sourceTree = "<group>"; };
+		167A2389217B324200BA6EFD /* model.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = model.pb.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,7 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				161D2723217A1513009F3190 /* SwiftProtobuf.framework in Frameworks */,
+				167A2391217B32A100BA6EFD /* SwiftProtobuf.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,6 +101,7 @@
 		161D26FE217A14BB009F3190 /* emit_demo */ = {
 			isa = PBXGroup;
 			children = (
+				167A2389217B324200BA6EFD /* model.pb.swift */,
 				161D26FF217A14BB009F3190 /* AppDelegate.swift */,
 				161D2701217A14BB009F3190 /* ViewController.swift */,
 				161D2703217A14BB009F3190 /* Main.storyboard */,
@@ -122,6 +140,7 @@
 				161D26F8217A14BB009F3190 /* Sources */,
 				161D26F9217A14BB009F3190 /* Frameworks */,
 				161D26FA217A14BB009F3190 /* Resources */,
+				167A2393217B32A100BA6EFD /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -214,6 +233,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				161D2702217A14BB009F3190 /* ViewController.swift in Sources */,
+				167A238D217B324200BA6EFD /* model.pb.swift in Sources */,
 				161D2700217A14BB009F3190 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

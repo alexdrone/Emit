@@ -23,7 +23,7 @@ public protocol EventEmitterProtocol: class, Synchronizable {
   func emitEvent(_ event: AnyEvent, observer: AnyObserver?)
 }
 
-final public class EventEmitter<O: AnyObservable>: EventEmitterProtocol {
+final public class EventEmitter<O: ObservableProtocol>: EventEmitterProtocol {
   /// Reference for the observable object emitting changes.
   public weak var observableObject: O?
   /// The synchronization strategy used for observers registration/deregistration.

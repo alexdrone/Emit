@@ -1,31 +1,21 @@
 import Foundation
 
-public protocol AnyObservable: class {
-  /// Internal only.
-  /// Type-erased event emitter.
-  var anyEventEmitter: EventEmitterProtocol { get}
-}
+/// An observable object.
+public protocol ObservableProtocol: class { }
 
+/// An object able to emit events.
 public protocol Observable: AnyObservable {
   /// The event emitter associated to this instance.
   var eventEmitter: EventEmitter<Self> { get }
 }
 
-public extension Observable {
+extension Observable {
   /// Build the `EventEmitter` instance for this observable object.
   public func makeEventEmitter() -> EventEmitter<Self> {
     return EventEmitter(object: self);
   }
-}
 
-extension Observable {
-  /// Internal only.
-  /// Type-erased event emitter.
-  public var anyEventEmitter: EventEmitterProtocol {
-    return eventEmitter
-  }
-
-  // MARK: - Registration
+  // MARK: Registration
 
   /// Registers a new observer for the observable object.
   public func register(observer: Observer, for events: [EventIdentifier] = [Event.Id.all]) {
@@ -39,7 +29,7 @@ extension Observable {
     eventEmitter.unregister(observer: observer)
   }
 
-  // MARK: - ObservationTokens
+  // MARK: ObservationTokens
 
   /// Ad-hoc observer that reacts to `ObjectChangeEvent` events.
   /// - parameter onChange: The closure executed whenever the `ObjectChangeEvent` event is emitted.
@@ -68,7 +58,7 @@ extension Observable {
     return eventEmitter.observe(keyPath: keyPath, onChange: onChange)
   }
 
-  // MARK: - Registration
+  // MARK: Event propagation
 
   /// Emit a `ObjectChange` event.
   /// - parameter attributes: Additional event qualifiers.
@@ -102,6 +92,13 @@ extension Observable {
   public func emitEvent(_ event: AnyEvent) {
     eventEmitter.emitEvent(event)
   }
+
+  // MARK: Internal
+
+  /// Internal only - type-erased event emitter.
+  public var anyEventEmitter: EventEmitterProtocol {
+    return eventEmitter
+  }
 }
 
 // MARK: - KVO Binding
@@ -120,4 +117,11 @@ extension Observable where Self: NSObject {
   public func unbindKVOToPropertyChangeEvent<V>(keyPath: KeyPath<Self, V>) {
     eventEmitter.unbindKVOToPropertyChangeEvent(object: self, keyPath: keyPath)
   }
+}
+
+// MARK: - Internal Protocols
+
+public protocol AnyObservable: ObservableProtocol {
+  /// Type-erased event emitter.
+  var anyEventEmitter: EventEmitterProtocol { get }
 }

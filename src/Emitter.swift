@@ -21,6 +21,10 @@ public protocol EventEmitterProtocol: class, Synchronizable {
   var chainedEventEmitter: EventEmitterProtocol? { get set }
   /// Emit an event.
   func emitEvent(_ event: AnyEvent, observer: AnyObserver?)
+  /// Registers a new observer for the observable object.
+  func register(observer: Observer, for events: [EventIdentifier])
+  /// Force unregister an observer.
+  func unregister(observer: Observer)
 }
 
 final public class EventEmitter<O: ObservableProtocol>: EventEmitterProtocol {
@@ -43,7 +47,7 @@ final public class EventEmitter<O: ObservableProtocol>: EventEmitterProtocol {
   // MARK: - Registration
 
   /// Registers a new observer for the observable object.
-  func register(observer: Observer, for events: [EventIdentifier]) {
+  public func register(observer: Observer, for events: [EventIdentifier]) {
     let container = AnyObserver(observer: observer, events: events)
     synchronize { [weak self] in
       guard let `self` = self else { return }
@@ -57,7 +61,7 @@ final public class EventEmitter<O: ObservableProtocol>: EventEmitterProtocol {
   /// Force unregister an observer.
   /// - note: This is not necessary in most use-cases since the observation is stopped whenever
   /// the observer object is being deallocated.
-  func unregister(observer: Observer) {
+  public func unregister(observer: Observer) {
     synchronize { [weak self] in
       guard let `self` = self else { return }
       self.observers = self.observers.filter { $0.observer !== observer && $0.observer != nil }

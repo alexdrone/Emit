@@ -110,16 +110,14 @@ final public class ObservableArray<T: Equatable>: ObservableArrayProtocol {
 
 public extension Observer where Self: ObservableArrayProtocol {
   /// Prevents the `observeKeyPath` function to be invoked on ObservableArrays.
-  @available(*, unavailable)
-  public func observeKeyPath<V>(
+  @available(*, unavailable) public func observeKeyPath<V>(
     keyPath: KeyPath<Self, V>,
     onChange: @escaping (_KpEvent<Self, V>) -> Void) -> PropertyToken<Self, V> {
     fatalError()
   }
 
   /// Prevents the `emitPropertyChangeEvent` function to be invoked on ObservableArrays.
-  @available(*, unavailable)
-  public func emitPropertyChangeEvent<V>(
+  @available(*, unavailable) public func emitPropertyChangeEvent<V>(
     keyPath: KeyPath<Self, V>,
     old: V? = nil,
     attributes: EventAttributes = [],

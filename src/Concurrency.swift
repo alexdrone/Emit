@@ -14,8 +14,7 @@ public protocol Synchronizable {
 public extension Synchronizable {
   /// Short-hand for `self.synchronizationStrategy.synchronize(_:)`.
   /// Runs the code passed as parameter with the desired synchronization strategy.
-  @inline(__always)
-  public func synchronize(_ block: @escaping () -> Void) {
+  @inline(__always) public func synchronize(_ block: @escaping () -> Void) {
     synchronizationStrategy.synchronize(block)
   }
 }
@@ -29,8 +28,7 @@ final public class NonSynchronizedMainThread: SynchronizationStrategy {
   public static let `default` = NonSynchronizedMainThread()
   /// Simply checks that the block is performed on the main thread without any additional
   /// synchronization logic.
-  @inline(__always)
-  public func synchronize(_ block: @escaping () -> Void) {
+  @inline(__always) public func synchronize(_ block: @escaping () -> Void) {
     assert(Thread.isMainThread)
     block()
   }

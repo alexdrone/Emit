@@ -5,7 +5,7 @@ public protocol Observer: class {
   func onChange(event: AnyEvent)
 }
 
-public class ObservationToken<O: Observable, E: AnyEvent>: Observer {
+public class ObservationToken<O: ObservableProtocol, E: AnyEvent>: Observer {
   /// Closure called whenever an event change is being triggered.
   public let onChangeBlock: (E) -> Void
   /// The event identifier associated to this observer.
@@ -35,11 +35,12 @@ public class ObservationToken<O: Observable, E: AnyEvent>: Observer {
   /// - note: This is not necessary in most use-cases since the observation is stopped whenever
   /// the observer object is being deallocated.
   public func dispose() {
-    object?.unregister(observer: self)
+    guard let object = object as? AnyObservable else { return }
+    object.unregister(observer: self)
   }
 }
 
-public class PropertyChangeObservationToken<O: Observable, V>: Token<O, _KpEvent<O, V>> {
+public class PropertyChangeObservationToken<O: ObservableProtocol, V>: Token<O, _KpEvent<O, V>> {
   /// Constructs a new `ObservationToken`.
   /// - parameter id: The keyPath being observed.
   init(keyPath: KeyPath<O, V>, onChange: @escaping (PropertyChangeEvent<O, V>) -> Void) {

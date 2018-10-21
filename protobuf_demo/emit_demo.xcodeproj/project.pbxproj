@@ -13,8 +13,10 @@
 		161D2707217A14BC009F3190 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 161D2706217A14BC009F3190 /* Assets.xcassets */; };
 		161D270A217A14BC009F3190 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 161D2708217A14BC009F3190 /* LaunchScreen.storyboard */; };
 		167A238D217B324200BA6EFD /* model.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167A2389217B324200BA6EFD /* model.pb.swift */; };
-		167A2391217B32A100BA6EFD /* SwiftProtobuf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 161D2722217A1513009F3190 /* SwiftProtobuf.framework */; };
-		167A2392217B32A100BA6EFD /* SwiftProtobuf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 161D2722217A1513009F3190 /* SwiftProtobuf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		16C6AB2A217D012A003F5AEE /* SwiftProtobuf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 161D2722217A1513009F3190 /* SwiftProtobuf.framework */; };
+		16C6AB2B217D012A003F5AEE /* SwiftProtobuf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 161D2722217A1513009F3190 /* SwiftProtobuf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		16C6AB2D217D012D003F5AEE /* Emit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 161D271A217A14FC009F3190 /* Emit.framework */; };
+		16C6AB2E217D012D003F5AEE /* Emit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 161D271A217A14FC009F3190 /* Emit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,16 +41,24 @@
 			remoteGlobalIDString = FR_479945003232;
 			remoteInfo = Test;
 		};
+		16C6AB2F217D012D003F5AEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 161D2711217A14FC009F3190 /* Emit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = NT_620523922009;
+			remoteInfo = Emit_macOS;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		167A2393217B32A100BA6EFD /* Embed Frameworks */ = {
+		16C6AB2C217D012A003F5AEE /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				167A2392217B32A100BA6EFD /* SwiftProtobuf.framework in Embed Frameworks */,
+				16C6AB2B217D012A003F5AEE /* SwiftProtobuf.framework in Embed Frameworks */,
+				16C6AB2E217D012D003F5AEE /* Emit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -73,7 +83,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				167A2391217B32A100BA6EFD /* SwiftProtobuf.framework in Frameworks */,
+				16C6AB2A217D012A003F5AEE /* SwiftProtobuf.framework in Frameworks */,
+				16C6AB2D217D012D003F5AEE /* Emit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,11 +151,12 @@
 				161D26F8217A14BB009F3190 /* Sources */,
 				161D26F9217A14BB009F3190 /* Frameworks */,
 				161D26FA217A14BB009F3190 /* Resources */,
-				167A2393217B32A100BA6EFD /* Embed Frameworks */,
+				16C6AB2C217D012A003F5AEE /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				16C6AB30217D012D003F5AEE /* PBXTargetDependency */,
 			);
 			name = emit_demo;
 			productName = emit_demo;
@@ -239,6 +251,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		16C6AB30217D012D003F5AEE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Emit_macOS;
+			targetProxy = 16C6AB2F217D012D003F5AEE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		161D2703217A14BB009F3190 /* Main.storyboard */ = {
@@ -379,6 +399,7 @@
 		161D270F217A14BC009F3190 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -400,6 +421,7 @@
 		161D2710217A14BC009F3190 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				FRAMEWORK_SEARCH_PATHS = (

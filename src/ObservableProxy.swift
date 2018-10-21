@@ -29,7 +29,14 @@ public final class ObservableProxy<T: Equatable>: AnyObservable, Equatable {
     self.buffer = buffer
   }
 
-  public func set<V>(_ keyPath: ReferenceWritableKeyPath<T, V>, _ value: V) {
+  /// Returns a copy of the current buffer.
+  /// - note: If `buffer` is a reference type, this will be the original reference used at
+  /// initialization time.
+  public func copy() -> T {
+    return buffer
+  }
+
+  public func set<V>(_ keyPath: WritableKeyPath<T, V>, _ value: V) {
     let old = buffer[keyPath: keyPath]
     buffer[keyPath: keyPath] = value
     let event = PropertyChangeEvent<T, V>(
@@ -78,5 +85,18 @@ public final class ObservableProxy<T: Equatable>: AnyObservable, Equatable {
     onChange: @escaping (ObjectChangeEvent) -> Void
   ) -> Token<ObservableProxy<T>, _ObjEvent> {
     return observeEvent(id: Event.Id.objectChange, onChange: onChange)
+  }
+
+  /// Creates an ad-hoc observer for the property change associated to the given keypath.
+  /// The observation lifecycle is linked to the `ObservationToken` lifecycle.
+  /// - parameter keyPath: The observed keypath.
+  /// - parameter onChange: The closure executed whenever the desired event is emitted.
+  public func observeKeyPath<V>(
+    keyPath: KeyPath<T, V>,
+    onChange: @escaping (_KpEvent<T, V>) -> Void
+  ) -> Token<ObservableProxy<T>, _KpEvent<T, V>> {
+    return observeEvent(id: keyPath.id) { (event: _KpEvent<T, V>) in
+      onChange(event)
+    }
   }
 }

@@ -96,9 +96,9 @@ public protocol DebuggableEvent: AnyEvent {
 }
 
 /// Event propagated to a observer that is listening for `observeKeyPath`.
-@_fixed_layout public struct PropertyChangeEvent<O: ObservableProtocol, V>: DebuggableEvent {
+@_fixed_layout public struct PropertyChangeEvent<O, V>: DebuggableEvent {
   public let id: EventIdentifier
-  public weak var object: ObservableProtocol?
+  public var object: ObservableProtocol?
   public let attributes: EventAttributes
   public let debugDescription: String?
   public var userInfo: UserInfo?
@@ -117,7 +117,7 @@ public protocol DebuggableEvent: AnyEvent {
     debugDescription: String? = nil
   ) {
     self.id = keyPath.id
-    self.object = object
+    self.object = object as? ObservableProtocol
     self.oldValue = old
     self.newValue = new
     self.attributes = attributes

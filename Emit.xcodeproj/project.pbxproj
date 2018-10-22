@@ -24,8 +24,8 @@
 		BF_634522689025 /* ObservableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_409147405849 /* ObservableTests.swift */; };
 		BF_701837829840 /* TestObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_682478902642 /* TestObjects.swift */; };
 		BF_776816222598 /* Emitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_449466757824 /* Emitter.swift */; };
-		BF_811593590121 /* Observable.h in Headers */ = {isa = PBXBuildFile; fileRef = FR_282239236428 /* Observable.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		BF_818027908982 /* Observable.h in Headers */ = {isa = PBXBuildFile; fileRef = FR_282239236428 /* Observable.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BF_811593590121 /* Emit.h in Headers */ = {isa = PBXBuildFile; fileRef = FR_282239236428 /* Emit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BF_818027908982 /* Emit.h in Headers */ = {isa = PBXBuildFile; fileRef = FR_282239236428 /* Emit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BF_848468247095 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_640820736363 /* Observable.swift */; };
 		BF_890017292414 /* ObservableArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_855410634112 /* ObservableArray.swift */; };
 /* End PBXBuildFile section */
@@ -44,7 +44,7 @@
 		161D2724217A1669009F3190 /* ObservableProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableProxy.swift; sourceTree = "<group>"; };
 		16C6AB25217CF7BB003F5AEE /* ObservableProxyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableProxyTests.swift; sourceTree = "<group>"; };
 		FR_236718980560 /* Emit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Emit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		FR_282239236428 /* Observable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Observable.h; sourceTree = "<group>"; };
+		FR_282239236428 /* Emit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Emit.h; sourceTree = "<group>"; };
 		FR_409147405849 /* ObservableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableTests.swift; sourceTree = "<group>"; };
 		FR_449466757824 /* Emitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emitter.swift; sourceTree = "<group>"; };
 		FR_456968685412 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -79,7 +79,7 @@
 				FR_449466757824 /* Emitter.swift */,
 				FR_739033256418 /* Events.swift */,
 				FR_456968685412 /* Info.plist */,
-				FR_282239236428 /* Observable.h */,
+				FR_282239236428 /* Emit.h */,
 				FR_640820736363 /* Observable.swift */,
 				FR_855410634112 /* ObservableArray.swift */,
 				FR_826643526656 /* Observer.swift */,
@@ -128,7 +128,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BF_818027908982 /* Observable.h in Headers */,
+				BF_818027908982 /* Emit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,7 +136,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BF_811593590121 /* Observable.h in Headers */,
+				BF_811593590121 /* Emit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

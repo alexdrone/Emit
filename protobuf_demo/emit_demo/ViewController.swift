@@ -6,18 +6,19 @@ class ViewController: UIViewController {
 
   @IBOutlet weak var label: UILabel!
   @IBOutlet weak var button: UIButton!
+  var token: Observer?
 
-  let observableProto = ObservableProxy(buffer: BookInfo)
+  let observableProto = ObservableProxy(buffer: BookInfo())
 
   override func viewDidLoad() {
     super.viewDidLoad()
     button.addTarget(self, action: #selector(buttonPressed(sender:)), for: .touchUpInside)
-    observableProto.observeKeyPath(\BookInfo.author) { event in
-      label.text = event.newValue
+    token = observableProto.observeKeyPath(keyPath: \BookInfo.author) { event in
+      self.label.text = event.newValue
     }
   }
 
-  private func buttonPressed(sender: UIButton) {
+  @objc private func buttonPressed(sender: UIButton) {
     observableProto.set(\BookInfo.author, "foo")
   }
 

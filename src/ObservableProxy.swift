@@ -1,6 +1,5 @@
 import Foundation
 
-
 public final class ObservableProxy<T: Equatable>: AnyObservable, Equatable {
   /// The event emitter associated with this observable proxy.
   public private(set) lazy var eventEmitter: EventEmitter<ObservableProxy<T>> = {

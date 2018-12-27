@@ -12,7 +12,7 @@ curl "https://raw.githubusercontent.com/alexdrone/Emit/master/bin/dist.zip" > di
 
 Drag `Emit.framework` in your project and add it as an embedded binary.
 
-If you use [xcodegen]() add the framework to your *project.yml* like so:
+If you use [xcodegen](https://github.com/yonaskolb/XcodeGen) add the framework to your *project.yml* like so:
 
 ```
 targets:

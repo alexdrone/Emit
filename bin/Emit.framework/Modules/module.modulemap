@@ -1,0 +1,11 @@
+framework module Emit {
+  umbrella header "Emit.h"
+
+  export *
+  module * { export * }
+}
+
+module Emit.Swift {
+    header "Emit-Swift.h"
+    requires objc
+}

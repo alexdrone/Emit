@@ -15,17 +15,9 @@ Drag `Emit.framework` in your project and add it as an embedded binary.
 If you use [xcodegen]() add the framework to your *project.yml* like so:
 
 ```
-name: MyApp
-options:
-  bundleIdPrefix: com.my.app
 targets:
-  MyAppTarget:
-    type: application
-    platform: iOS
-    sources: src/
+  YOUR_APP_TARGET:
+    ...
     dependencies:
-      - framework: Emit.framework
-    settings:
-      base:
-        INFOPLIST_FILE: src/Info.plist
+      - framework: PATH/TO/YOUR/DEPS/Emit.framework
 ```

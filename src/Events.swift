@@ -5,13 +5,13 @@ import Foundation
 public extension Event.Id {
   /// This is the `EventIdentifier` propagated to a observer that is listening for
   /// `observeObjectChange` for a given object.
-  public static let objectChange: EventIdentifier = "__object"
+  static let objectChange: EventIdentifier = "__object"
   /// This is the `EventIdentifier` propagated to a observer that is listening for
   /// `observeArrayChange` for a given object.
-  public static let arrayChange: EventIdentifier = "__array"
+  static let arrayChange: EventIdentifier = "__array"
   /// This is the `EventIdentifier` that can be passed to `register(observer:for events:)` whenever
   /// The observer is interesting in listening to every event emitted by the observed object.
-  public static let all: EventIdentifier = "__all"
+  static let all: EventIdentifier = "__all"
 }
 
 // MARK: - Attributes

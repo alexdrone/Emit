@@ -56,7 +56,7 @@ final public class ObservableArray<T: Equatable>: ObservableArrayProtocol {
       guard event.object !== self, let `self` = self, let el = event.object as? T else { return }
       self.dispatch { [weak self] in
         // Find the index for the object that triggered the event (if applicable).
-        guard let `self` = self, let index = self.array.index(of: el) else { return }
+        guard let `self` = self, let index = self.array.firstIndex(of: el) else { return }
         let object = self.array[index]
         onChange(event, object, index)
       }
@@ -75,7 +75,7 @@ final public class ObservableArray<T: Equatable>: ObservableArrayProtocol {
       guard event.object !== self, let `self` = self, let el = event.object as? T else { return }
       self.dispatch { [weak self] in
         // Find the index for the object that triggered the event (if applicable).
-        guard let `self` = self, let index = self.array.index(of: el) else { return }
+        guard let `self` = self, let index = self.array.firstIndex(of: el) else { return }
         let object = self.array[index]
         onChange(event, object, index)
       }
@@ -110,14 +110,14 @@ final public class ObservableArray<T: Equatable>: ObservableArrayProtocol {
 
 public extension Observer where Self: ObservableArrayProtocol {
   /// Prevents the `observeKeyPath` function to be invoked on ObservableArrays.
-  @available(*, unavailable) public func observeKeyPath<V>(
+  @available(*, unavailable) func observeKeyPath<V>(
     keyPath: KeyPath<Self, V>,
     onChange: @escaping (_KpEvent<Self, V>) -> Void) -> PropertyToken<Self, V> {
     fatalError()
   }
 
   /// Prevents the `emitPropertyChangeEvent` function to be invoked on ObservableArrays.
-  @available(*, unavailable) public func emitPropertyChangeEvent<V>(
+  @available(*, unavailable) func emitPropertyChangeEvent<V>(
     keyPath: KeyPath<Self, V>,
     old: V? = nil,
     attributes: EventAttributes = [],

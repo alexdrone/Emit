@@ -71,7 +71,7 @@
 		FR_94BE11330407DADA93EE1056E415D8EC /* Concurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Concurrency.swift; sourceTree = "<group>"; };
 		FR_9915562926D81E9409B63A05956C58D4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FR_BBB356C017E4BFCB379FE784E034B43B /* ObservableArrayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableArrayTests.swift; sourceTree = "<group>"; };
-		FR_E985DD7DBCB149C095F33E24A3B03F0D /* Test.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = Test.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FR_E985DD7DBCB149C095F33E24A3B03F0D /* Test.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Test.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FR_F94B92A82DBFE53DB994454F2CA38466 /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -217,6 +217,14 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1000;
+				TargetAttributes = {
+					NT_2A9F0C84B77C0428D391AC613259938A = {
+						LastSwiftMigration = 1020;
+					};
+					NT_F286BE025FBD2D7EBF3D587EF3250933 = {
+						LastSwiftMigration = 1020;
+					};
+				};
 			};
 			buildConfigurationList = CL_B45E2C9F237439A0AE4696207144630F /* Build configuration list for PBXProject "Emit" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -224,6 +232,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = G_449601C464B0894B0407D384D2BD8506;
 			projectDirPath = "";
@@ -325,6 +334,7 @@
 				INFOPLIST_FILE = test/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -377,7 +387,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -404,7 +414,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -417,6 +427,7 @@
 				INFOPLIST_FILE = test/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

@@ -14,7 +14,7 @@ public protocol Synchronizable {
 public extension Synchronizable {
   /// Short-hand for `self.synchronizationStrategy.synchronize(_:)`.
   /// Runs the code passed as parameter with the desired synchronization strategy.
-  @inline(__always) public func synchronize(_ block: @escaping () -> Void) {
+  @inline(__always) func synchronize(_ block: @escaping () -> Void) {
     synchronizationStrategy.synchronize(block)
   }
 }

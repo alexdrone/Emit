@@ -13,13 +13,13 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     button.addTarget(self, action: #selector(buttonPressed(sender:)), for: .touchUpInside)
-    token = observableProto.observeKeyPath(keyPath: \BookInfo.author) { event in
+    token = observableProto.observeKeyPath(keyPath: \.author) { event in
       self.label.text = event.newValue
     }
   }
 
   @objc private func buttonPressed(sender: UIButton) {
-    observableProto.set(\BookInfo.author, "foo")
+    observableProto.set(\.author, "foo")
   }
 
 }

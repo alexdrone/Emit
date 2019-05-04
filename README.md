@@ -1,9 +1,11 @@
 
 <img src="https://raw.githubusercontent.com/alexdrone/Emit/master/docs/logo.png" width=300 alt="Emit"/>
 
+Event propagation and object observation library.
+
+
 
 [![Swift](https://img.shields.io/badge/swift-5-orange.svg?style=flat)](#) [![Platform](https://img.shields.io/badge/platform-iOS|macOS-lightgrey.svg?style=flat)](#)
-Event propagation and object observation library.
 
 ### Installing the framework
 
